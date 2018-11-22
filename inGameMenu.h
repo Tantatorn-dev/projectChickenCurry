@@ -40,7 +40,7 @@ protected:
   SDL_Rect menuButtonRect;
 
   SDL_Texture *buyIcon;
-  SDL_Rect iconRect;
+  
 
   int x;
   int y;
@@ -127,6 +127,9 @@ private:
   SDL_Rect goldAmoutRect;
   SDL_Texture *coinImage;
 
-  mButton* useButtons[2];
+  mButton *useButtons[2];
   unsigned int useTimer;
+
+  mButton *buyButtons[2];
+  unsigned int buyTimer;
 };

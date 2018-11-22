@@ -26,15 +26,10 @@ mButton::mButton(Setup *passed_setup, int passed_x, int passed_y, int passed_but
     textRect.w = buttonWidth / 2;
     textRect.h = buttonHeight / 2;
 
-    iconRect.x = x;
-    iconRect.y = y;
-    iconRect.w = buttonWidth;
-    iconRect.h = buttonHeight;
-
     textColor = {0, 0, 0};
 
     buyIcon = NULL;
-    buyIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/items/buyIcon.png");
+    buyIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/buyIcon.png");
 
     currentMouseState = MOUSE_OUT;
 }
@@ -52,7 +47,14 @@ void mButton::setPosition(int mouseX, int mouseY)
 
 void mButton::handleMouseEvent()
 {
-    this->drawMenuButton();
+    if (usingImageState == ON)
+    {
+        this->drawMenuButtonWithIcon();
+    }
+    else
+    {
+        this->drawMenuButton();
+    }
     if (sdlSetup->getMainEvent()->type == SDL_MOUSEMOTION || sdlSetup->getMainEvent()->type == SDL_MOUSEBUTTONDOWN || sdlSetup->getMainEvent()->type == SDL_MOUSEBUTTONUP)
     {
         //Get mouse position
@@ -106,12 +108,14 @@ void mButton::handleMouseEvent()
             default:
                 currentMouseState = MOUSE_UP;
             }
-            if(usingImageState == ON){
+            if (usingImageState == ON)
+            {
                 this->drawMenuButtonWithIcon();
-            }else{
+            }
+            else
+            {
                 this->drawMenuButton();
             }
-            
         }
     }
 }
@@ -153,21 +157,20 @@ void mButton::drawMenuButton()
 void mButton::drawMenuButtonWithIcon()
 {
     if (currentMouseState == MOUSE_OUT)
-    {  
+    {
         SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xff, 0x5b, 0x0f, 0xFF);
         SDL_RenderFillRect(sdlSetup->getRenderer(), &menuButtonRect);
 
-        SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &textRect);
-        
+        SDL_RenderCopy(sdlSetup->getRenderer(), buyIcon, NULL, &menuButtonRect);
     }
     else
     {
         if (currentMouseState == MOUSE_DOWN)
-        {     
+        {
             SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xff, 0xa0, 0x75, 0xFF);
             SDL_RenderFillRect(sdlSetup->getRenderer(), &menuButtonRect);
 
-            SDL_RenderCopy(sdlSetup->getRenderer(),buyIcon, NULL, &menuButtonRect);
+            SDL_RenderCopy(sdlSetup->getRenderer(), buyIcon, NULL, &menuButtonRect);
         }
         else
         {
@@ -338,6 +341,11 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
         useButtons[i] = new mButton(sdlSetup, 320, 110 + 60 * i, 50, 50, "USE", OFF);
     }
 
+    for (int i = 0; i < 2; i++)
+    {
+        buyButtons[i] = new mButton(sdlSetup, 105 + 185 * i, 430, 50, 50, "", ON);
+    }
+
     useTimer = 0;
 }
 
@@ -357,6 +365,11 @@ inGameMenu::~inGameMenu()
     for (int i = 0; i < 2; i++)
     {
         delete useButtons[i];
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        delete buyButtons[i];
     }
 
     SDL_DestroyTexture(potionImage);
@@ -582,4 +595,29 @@ void inGameMenu::drawItemScreen()
     sdlSetup->loadFromRenderedText(goldAmoutString, {0, 0, 0}, BAHNSCHRIFT);
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &goldAmoutRect);
     sdlSetup->clearText();
+
+    for (int i = 0; i < 2; i++)
+    {
+        buyButtons[i]->handleMouseEvent();
+    }
+
+    if (buyButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - buyTimer > 300)
+    {
+        if (lo->getGold() >= 10)
+        {
+            lo->setGold(lo->getGold() - 10);
+            lo->setPotionAmout(lo->getPotionAmout() + 1);
+        }
+        buyTimer = SDL_GetTicks();
+    }
+
+    if (buyButtons[1]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - buyTimer > 300)
+    {
+        if (lo->getGold() >= 20)
+        {
+            lo->setGold(lo->getGold() - 20);
+            lo->setElixirAmout(lo->getElixirAmout() + 1);
+        }
+        buyTimer = SDL_GetTicks();
+    }
 }
