@@ -1,11 +1,11 @@
 #include "inGameMenu.h"
 
-mButton::mButton(Setup *passed_setup, int passed_x, int passed_y, int passed_buttonWidth, int passed_buttonHeight, std::string passed_text, componentState passed_state)
+mButton::mButton(Setup *passed_setup, int passed_x, int passed_y, int passed_buttonWidth, int passed_buttonHeight, std::string passed_text, iconState passed_state)
 {
     sdlSetup = passed_setup;
     mText = passed_text;
 
-    usingImageState = passed_state;
+    icon = passed_state;
 
     mousePosition.x = 0;
     mousePosition.y = 0;
@@ -31,12 +31,20 @@ mButton::mButton(Setup *passed_setup, int passed_x, int passed_y, int passed_but
     buyIcon = NULL;
     buyIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/buyIcon.png");
 
+    upgradeIcon = NULL;
+    upgradeIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/upgradeIcon.png");
+
     currentMouseState = MOUSE_OUT;
 }
 
 mButton::~mButton()
 {
     delete sdlSetup;
+
+    SDL_DestroyTexture(buyIcon);
+    SDL_DestroyTexture(upgradeIcon);
+    buyIcon = NULL;
+    upgradeIcon = NULL;
 }
 
 void mButton::setPosition(int mouseX, int mouseY)
@@ -47,9 +55,13 @@ void mButton::setPosition(int mouseX, int mouseY)
 
 void mButton::handleMouseEvent()
 {
-    if (usingImageState == ON)
+    if (icon == BUY)
     {
-        this->drawMenuButtonWithIcon();
+        this->drawMenuButtonWithBuyIcon();
+    }
+    else if (icon == UPGRADE)
+    {
+        this->drawMenuButtonWithUpgradeIcon();
     }
     else
     {
@@ -108,9 +120,13 @@ void mButton::handleMouseEvent()
             default:
                 currentMouseState = MOUSE_UP;
             }
-            if (usingImageState == ON)
+            if (icon == BUY)
             {
-                this->drawMenuButtonWithIcon();
+                this->drawMenuButtonWithBuyIcon();
+            }
+            else if (icon == UPGRADE)
+            {
+                this->drawMenuButtonWithUpgradeIcon();
             }
             else
             {
@@ -154,7 +170,7 @@ void mButton::drawMenuButton()
     }
 }
 
-void mButton::drawMenuButtonWithIcon()
+void mButton::drawMenuButtonWithBuyIcon()
 {
     if (currentMouseState == MOUSE_OUT)
     {
@@ -182,6 +198,34 @@ void mButton::drawMenuButtonWithIcon()
     }
 }
 
+void mButton::drawMenuButtonWithUpgradeIcon()
+{
+    if (currentMouseState == MOUSE_OUT)
+    {
+        SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xff, 0x5b, 0x0f, 0xFF);
+        SDL_RenderFillRect(sdlSetup->getRenderer(), &menuButtonRect);
+
+        SDL_RenderCopy(sdlSetup->getRenderer(), upgradeIcon, NULL, &menuButtonRect);
+    }
+    else
+    {
+        if (currentMouseState == MOUSE_DOWN)
+        {
+            SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xff, 0xa0, 0x75, 0xFF);
+            SDL_RenderFillRect(sdlSetup->getRenderer(), &menuButtonRect);
+
+            SDL_RenderCopy(sdlSetup->getRenderer(), upgradeIcon, NULL, &menuButtonRect);
+        }
+        else
+        {
+            SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xf2, 0x6f, 0x32, 0xFF);
+            SDL_RenderFillRect(sdlSetup->getRenderer(), &menuButtonRect);
+
+            SDL_RenderCopy(sdlSetup->getRenderer(), upgradeIcon, NULL, &menuButtonRect);
+        }
+    }
+}
+
 inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
 {
     sdlSetup = passed_setup;
@@ -199,7 +243,7 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
 
     for (int i = 0; i < 3; i++)
     {
-        menuButtons.push_back(new mButton(sdlSetup, 520, 20 + 100 * i, 220, 80, menuText[i], OFF));
+        menuButtons.push_back(new mButton(sdlSetup, 520, 20 + 100 * i, 220, 80, menuText[i], NOT_ICON));
     }
 
     widgetBox.x = 50;
@@ -323,6 +367,16 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
     goldAmoutRect.w = 50;
     goldAmoutRect.h = 50;
 
+    perkRect.x = 220;
+    perkRect.y = 270;
+    perkRect.w = 100;
+    perkRect.h = 50;
+
+    perkPointRect.x = 330;
+    perkPointRect.y = 270;
+    perkPointRect.w = 50;
+    perkPointRect.h = 50;
+
     coinImage = NULL;
     coinImage = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/items/coin.png");
 
@@ -338,15 +392,22 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
 
     for (int i = 0; i < 2; i++)
     {
-        useButtons[i] = new mButton(sdlSetup, 320, 110 + 60 * i, 50, 50, "USE", OFF);
+        useButtons[i] = new mButton(sdlSetup, 320, 110 + 60 * i, 50, 50, "USE", NOT_ICON);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        buyButtons[i] = new mButton(sdlSetup, 105 + 185 * i, 430, 50, 50, "", ON);
+        buyButtons[i] = new mButton(sdlSetup, 105 + 185 * i, 430, 50, 50, "", BUY);
     }
 
-    useTimer = 0;
+    for(int i=0;i<2;i++){
+        upgradeButtons[i] = new mButton(sdlSetup,320,60+60*i ,50,50,"",UPGRADE);
+    }
+
+    for (int i = 2; i < 5; i++)
+    {
+        upgradeButtons[i] = new mButton(sdlSetup, 230, 350 + 60 * (i - 2), 50, 50, "", UPGRADE);
+    }
 }
 
 inGameMenu::~inGameMenu()
@@ -370,6 +431,11 @@ inGameMenu::~inGameMenu()
     for (int i = 0; i < 2; i++)
     {
         delete buyButtons[i];
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        delete upgradeButtons[i];
     }
 
     SDL_DestroyTexture(potionImage);
@@ -515,6 +581,60 @@ void inGameMenu::drawCharacterSummary()
     std::string intString = std::to_string(lo->getINT());
     sdlSetup->loadFromRenderedText("INT " + intString, BLACK, BAHNSCHRIFT);
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &INTRect);
+    sdlSetup->clearText();
+
+    for (int i = 0; i < 5; i++)
+    {
+        upgradeButtons[i]->handleMouseEvent();
+    }
+
+    if(upgradeButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        if(lo->getPerk()>0){
+            lo->setPerk(lo->getPerk()-1);
+            lo->setMaxHP(lo->getMaxHP()+1);
+        }
+        upgradeTimer =SDL_GetTicks();
+    }
+
+    if(upgradeButtons[1]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        if(lo->getPerk()>0){
+            lo->setPerk(lo->getPerk()-1);
+            lo->setMaxMP(lo->getMaxMP()+1);
+        }
+        upgradeTimer =SDL_GetTicks();
+    }
+
+    if(upgradeButtons[2]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        if(lo->getPerk()>0){
+            lo->setPerk(lo->getPerk()-1);
+            lo->setATK(lo->getATK()+1);
+        }
+        upgradeTimer =SDL_GetTicks();
+    }
+
+    if(upgradeButtons[3]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        if(lo->getPerk()>0){
+            lo->setPerk(lo->getPerk()-1);
+            lo->setDEF(lo->getDEF()+1);
+        }
+        upgradeTimer =SDL_GetTicks();
+    }
+
+    if(upgradeButtons[4]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        if(lo->getPerk()>0){
+            lo->setPerk(lo->getPerk()-1);
+            lo->setINT(lo->getINT()+1);
+        }
+        upgradeTimer =SDL_GetTicks();
+    }
+
+    sdlSetup->loadFromRenderedText("Perk", BLACK, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &perkRect);
+    sdlSetup->clearText();
+
+    std::string perkPointString = std::to_string(lo->getPerk());
+    sdlSetup->loadFromRenderedText(perkPointString, BLACK, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &perkPointRect);
     sdlSetup->clearText();
 }
 

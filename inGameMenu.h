@@ -11,10 +11,16 @@
 
 const SDL_Color BLACK = {0, 0, 0};
 
+enum iconState {
+    NOT_ICON,
+    UPGRADE,
+    BUY
+};
+
 class mButton
 {
 public:
-  mButton(Setup *passed_setup, int passed_x, int passed_y,int passed_buttonWidth,int passed_buttonHeight, std::string passed_text,componentState passed_state);
+  mButton(Setup *passed_setup, int passed_x, int passed_y,int passed_buttonWidth,int passed_buttonHeight, std::string passed_text,iconState passed_state);
   ~mButton();
 
   mouseState getCurrentMouseState()
@@ -40,6 +46,7 @@ protected:
   SDL_Rect menuButtonRect;
 
   SDL_Texture *buyIcon;
+  SDL_Texture *upgradeIcon;
   
 
   int x;
@@ -50,9 +57,10 @@ protected:
 
   std::string mText;
   void drawMenuButton();
-  void drawMenuButtonWithIcon();
+  void drawMenuButtonWithBuyIcon();
+  void drawMenuButtonWithUpgradeIcon();
 
-  componentState usingImageState;
+  iconState icon;
 };
 
 
@@ -132,4 +140,9 @@ private:
 
   mButton *buyButtons[2];
   unsigned int buyTimer;
+
+  mButton *upgradeButtons[5];
+  unsigned int upgradeTimer;
+  SDL_Rect perkRect;
+  SDL_Rect perkPointRect;
 };

@@ -30,10 +30,14 @@ class mainCharacter{
     void directionPlayAnimation(int passed_direction);
 
     int getMaxHP();
+    void setMaxHP(int passed_maxHP);
+
     int getHP();
     void setHP(int passed_hp);
 
     int getMaxMP();
+    void setMaxMP(int passed_maxMP);
+
     int getMP();
     void setMP(int passed_mp);
 
@@ -41,13 +45,19 @@ class mainCharacter{
     void setGold(int passed_gold);
 
     int getLVL();
+    void levelUp();
 
     int getExp();
     void setExp(int passed_exp);
 
     int getATK();
+    void setATK(int passed_atk);
+
     int getDEF();
+    void setDEF(int passed_def);
+
     int getINT();
+    void setINT(int passed_int);
 
     int getStep();
     void setStep();
@@ -61,6 +71,8 @@ class mainCharacter{
     int getElixirAmout();
     void setElixirAmout(int passed_amout);
 
+    int getPerk();
+    void setPerk(int passed_perk);
     private:
     worldMap* Map;
 
@@ -99,4 +111,6 @@ class mainCharacter{
 
     struct item potion={"potion",5};
     struct item elixir={"elixir",5};
+
+    int perk;
 };

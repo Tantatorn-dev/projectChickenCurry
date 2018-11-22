@@ -61,6 +61,7 @@ void mainClass::gameLoop()
             combatScene->handlingEvent();
 
             Lo->drawHUD();
+            Lo->levelUp();
         }
         else if(introState2 == ON && SDL_GetTicks()-introTimer>300){
             sMenu->drawPrologue();

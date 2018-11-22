@@ -48,6 +48,8 @@ mainCharacter::mainCharacter(Setup *passed_setup, float *passed_cameraX, float *
     levelTextRect.y = 572;
     levelTextRect.w = 80;
     levelTextRect.h = 30;
+
+    perk = 0;
 }
 
 mainCharacter::~mainCharacter()
@@ -219,9 +221,19 @@ int mainCharacter::getATK()
     return attack;
 }
 
+void mainCharacter::setATK(int passed_atk)
+{
+    attack = passed_atk;
+}
+
 int mainCharacter::getDEF()
 {
     return defense;
+}
+
+void mainCharacter::setDEF(int passed_def)
+{
+    defense = passed_def;
 }
 
 void mainCharacter::drawHUD()
@@ -303,34 +315,75 @@ void mainCharacter::setStep()
     step = 0;
 }
 
-int mainCharacter::getINT(){
+int mainCharacter::getINT()
+{
     return intelligence;
 }
 
-int mainCharacter::getMaxHP(){
+void mainCharacter::setINT(int passed_int)
+{
+    intelligence = passed_int;
+}
+
+int mainCharacter::getMaxHP()
+{
     return maxHP;
 }
 
-int mainCharacter::getMaxMP(){
+void mainCharacter::setMaxHP(int passed_maxHP){
+    maxHP = passed_maxHP;
+}
+
+int mainCharacter::getMaxMP()
+{
     return maxMP;
 }
 
-int mainCharacter::getLVL(){
+void mainCharacter::setMaxMP(int passed_maxMP){
+    maxMP = passed_maxMP;
+}
+
+int mainCharacter::getLVL()
+{
     return level;
 }
 
-int mainCharacter::getPotionAmout(){
+int mainCharacter::getPotionAmout()
+{
     return potion.itemAmout;
 }
 
-void mainCharacter::setPotionAmout(int passed_amout){
+void mainCharacter::setPotionAmout(int passed_amout)
+{
     potion.itemAmout = passed_amout;
 }
 
-int mainCharacter::getElixirAmout(){
+int mainCharacter::getElixirAmout()
+{
     return elixir.itemAmout;
 }
 
-void mainCharacter::setElixirAmout(int passed_amout){
+void mainCharacter::setElixirAmout(int passed_amout)
+{
     elixir.itemAmout = passed_amout;
+}
+
+int mainCharacter::getPerk()
+{
+    return perk;
+}
+
+void mainCharacter::setPerk(int passed_perk)
+{
+    perk = passed_perk;
+}
+
+void mainCharacter::levelUp()
+{
+    if (experience - (50 * level) >= 0)
+    {
+        experience = experience - (50 * level);
+        level++;
+        perk+=10;
+    }
 }
