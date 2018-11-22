@@ -9,17 +9,18 @@ mainClass ::mainClass()
 
     sdlSetup = new Setup(&quit);
 
-    sMenu = new startMenu(sdlSetup, &quit,&mainGameLoopState,&introState1,&introState2);
+    audio = new audioManager();
+
+    sMenu = new startMenu(sdlSetup, &quit,&mainGameLoopState,&introState1,&introState2,audio);
 
     srand(time(NULL));
 
     wmap = new worldMap(sdlSetup, &cameraX, &cameraY);
     Lo = new mainCharacter(sdlSetup, &cameraX, &cameraY, wmap);
 
-    menu = new inGameMenu(sdlSetup, Lo);
-    combatScene = new battleScene(sdlSetup, Lo);
+    menu = new inGameMenu(sdlSetup, Lo,audio);
+    combatScene = new battleScene(sdlSetup, Lo,audio);
 
-    audio = new audioManager();
 
     audio->start();
 
@@ -43,7 +44,7 @@ void mainClass::gameLoop()
     while(!quit && sdlSetup->getMainEvent()->type != SDL_QUIT){
         sMenu->playBGAnimation(0,7,100);
     }*/
-    audio->playMainTheme();
+    audio->playOpeningTheme();
     while (!quit && sdlSetup->getMainEvent()->type != SDL_QUIT)
     {
         sdlSetup->begin();
@@ -57,9 +58,10 @@ void mainClass::gameLoop()
             Lo->update();
 
             wmap->drawFront();
-            menu->handlingEvent();
+            
             combatScene->handlingEvent();
-
+            menu->handlingEvent();
+            
             Lo->drawHUD();
             Lo->levelUp();
         }

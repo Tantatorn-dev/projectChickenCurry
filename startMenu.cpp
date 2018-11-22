@@ -134,11 +134,13 @@ void startMenuButton::drawMenuButton()
     }
 }
 
-startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3)
+startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3,audioManager *passed_audio)
 {
     sdlSetup = passed_setup;
     quit = passed_quit;
     mainGameLoopState = passed_state1;
+
+    audio=passed_audio;
 
     introState1 = passed_state2;
     introState2 = passed_state3;
@@ -197,6 +199,7 @@ startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *pas
     pressAnyKeyToContinueRect.y = 530;
     pressAnyKeyToContinueRect.w = 150;
     pressAnyKeyToContinueRect.h = 50;
+
 }
 
 startMenu::~startMenu()
@@ -220,10 +223,12 @@ void startMenu::draw()
     if (buttonStart->getCurrentMouseState() == MOUSE_DOWN)
     {
         *introState1 = ON;
+        audio->playClick();
     }
 
     if (buttonExit->getCurrentMouseState() == MOUSE_DOWN)
     {
+        audio->playClick();
         *quit = true;
     }
 
@@ -294,6 +299,7 @@ void startMenu::drawEnterNameScreen()
         {
             *introState1 = OFF;
             sdlSetup->setPlayerName(inputText);
+            audio->stopMusic();
             *introState2 = ON;
         }
         inputTextTimer = SDL_GetTicks();
@@ -360,6 +366,7 @@ void startMenu::drawPrologue()
 
     if(sdlSetup->getMainEvent()->type == SDL_KEYDOWN){
         *introState2=OFF;
+        audio->playMainTheme();
         *mainGameLoopState=ON;
     }
 }

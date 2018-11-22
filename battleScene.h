@@ -11,6 +11,7 @@
 #include "Setup.h"
 #include "mainCharacter.h"
 #include "enemy.h"
+#include "audioManager.h"
 
 
 class battleButton
@@ -54,7 +55,7 @@ private:
 class battleScene
 {
 public:
-  battleScene(Setup *passed_setup, mainCharacter *passed_lo);
+  battleScene(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio);
   ~battleScene();
 
   void handlingEvent();
@@ -77,11 +78,9 @@ private:
   componentState battleSceneState;
 
   std::vector<battleButton *> battleButtons;
-  std::string battleButtonText[4] = {
+  std::string battleButtonText[2] = {
       "Attack",
-      "Skill",
-      "Item",
-      "test"
+      "Skill"
       };
 
   int randIndex;
@@ -96,4 +95,8 @@ private:
   unsigned int magicButtonTimer;
   battleButton* magicButtons[4];
   std::string magicName[4] ={"flame","blizzard","arcane","phantom strike"};
+
+  unsigned int clickTimer;
+
+  audioManager *audio;
 };

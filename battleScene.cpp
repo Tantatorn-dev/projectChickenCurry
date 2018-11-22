@@ -132,10 +132,11 @@ void battleButton::drawBattleButton()
     }
 }
 
-battleScene::battleScene(Setup *passed_setup, mainCharacter *passed_lo)
+battleScene::battleScene(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio)
 {
     sdlSetup = passed_setup;
     Lo = passed_lo;
+    audio = passed_audio;
 
     backgroundImageRect.x = 120;
     backgroundImageRect.y = 120;
@@ -147,7 +148,7 @@ battleScene::battleScene(Setup *passed_setup, mainCharacter *passed_lo)
 
     battleSceneState = OFF;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 2; i++)
     {
         battleButtons.push_back(new battleButton(sdlSetup, 180 + 170 * i, 440, battleButtonText[i]));
     }
@@ -159,11 +160,11 @@ battleScene::battleScene(Setup *passed_setup, mainCharacter *passed_lo)
         magicButtons[i] = new battleButton(sdlSetup, 90 + 170 * i, 200, magicName[i]);
     }
 
-    enemies.push_back(new enemy(sdlSetup, Lo, "snake", 9, 4, 20, 5, 10));
-    enemies.push_back(new enemy(sdlSetup, Lo, "slime", 7, 6, 25, 7, 12));
-    enemies.push_back(new enemy(sdlSetup, Lo, "stinger", 8, 2, 14, 5, 10));
-    enemies.push_back(new enemy(sdlSetup, Lo, "goblin bandit", 8, 5, 23, 8, 11));
-    enemies.push_back(new enemy(sdlSetup, Lo, "skeleton", 10, 4, 18, 10, 16));
+    enemies.push_back(new enemy(sdlSetup, Lo, "snake", 9, 4, 20, 5, 10,audio));
+    enemies.push_back(new enemy(sdlSetup, Lo, "slime", 7, 6, 25, 7, 12,audio));
+    enemies.push_back(new enemy(sdlSetup, Lo, "stinger", 8, 2, 14, 5, 10,audio));
+    enemies.push_back(new enemy(sdlSetup, Lo, "goblin bandit", 8, 5, 23, 8, 11,audio));
+    enemies.push_back(new enemy(sdlSetup, Lo, "skeleton", 10, 4, 18, 10, 16,audio));
 
     closingBattleSceneTimer = 0;
 }
@@ -199,6 +200,7 @@ void battleScene::handlingEvent()
     {
         battleSceneState = ON;
         randIndex = rand() % 5;
+        audio->playBattleTheme();
     }
 
     if (battleSceneState == ON)
@@ -212,10 +214,12 @@ void battleScene::handlingEvent()
         if (battleButtons[1]->getCurrentMouseState() == MOUSE_DOWN && magicButtonState==OFF && SDL_GetTicks()-magicButtonTimer>300)
         {
             magicButtonState = ON;
+            audio->playClick();
             magicButtonTimer = SDL_GetTicks();
         }
         if(battleButtons[1]->getCurrentMouseState() == MOUSE_DOWN && magicButtonState==ON && SDL_GetTicks()-magicButtonTimer>300){
             magicButtonState = OFF;
+            audio->playClick();
             magicButtonTimer=SDL_GetTicks();
         }
         if (magicButtonState == ON)
@@ -227,14 +231,20 @@ void battleScene::handlingEvent()
             }
         }
         enemies[randIndex]->drawUpdate(battleButtons[0]->getCurrentMouseState(), 0);
-
-        enemies[randIndex]->drawUpdate(battleButtons[2]->getCurrentMouseState(), 2);
+        if(battleButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-clickTimer>300){
+            audio->playClick();
+            clickTimer=SDL_GetTicks();
+        }
+        
+        
+    
     }
 
     if (enemies[randIndex]->getEnemyState() == ENEMY_VANISH)
     {
         Lo->setStep();
         enemies[randIndex]->resetEnemy();
+        audio->playMainTheme();
         battleSceneState = OFF;
     }
 }

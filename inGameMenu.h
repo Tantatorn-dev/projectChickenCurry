@@ -6,6 +6,7 @@
 #include <SDL_ttf.h>
 #include "Setup.h"
 #include "mainCharacter.h"
+#include "audioManager.h"
 #include <string>
 #include <vector>
 
@@ -67,12 +68,14 @@ protected:
 class inGameMenu
 {
 public:
-  inGameMenu(Setup *passed_setup, mainCharacter *passed_lo);
+  inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio);
   ~inGameMenu();
   void handlingEvent();
 
 private:
   mainCharacter *lo;
+
+  audioManager *audio;
 
   void drawMenuBox();
 
@@ -145,4 +148,6 @@ private:
   unsigned int upgradeTimer;
   SDL_Rect perkRect;
   SDL_Rect perkPointRect;
+
+  unsigned int saveTimer;
 };

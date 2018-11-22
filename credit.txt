@@ -11,6 +11,11 @@ NPC by Antifarea on openGameArt
 Music by bart on openGameArt
 Start menu background by waxyking
 Final Fantasy font by Juan Pablo Reyes Altamirano
+Stream sounds by kurt on openGameArt
+Path to lake land music by Alexander Zhelano
+GUI sounds by Lokif on openGameArt
+Melee sounds by remaxim on openGameArt
+Spell sounds by p0ss on openGameArt
 
 
-Coding & Producing by Tantatorn Suksangwarn from CE KMITL (timefear007@gmail.com) 
+Coding & Producing by Tantatorn Suksangwarn @ CE KMITL (timefear007@gmail.com) 

@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
+#include "audioManager.h"
 #include "stdlib.h"
 #include "Setup.h"
 #include "mainCharacter.h"
@@ -20,7 +21,7 @@ enum enemyState
 class enemy
 {
 public:
-  enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp);
+  enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp,audioManager *passed_audio);
   ~enemy();
 
   void drawUpdate(mouseState passed_mouseState, int button);
@@ -38,6 +39,8 @@ public:
 protected:
   Setup *sdlSetup;
   mainCharacter *lo;
+
+  audioManager *audio;
 
   std::string enemyName;
   std::string filePath;

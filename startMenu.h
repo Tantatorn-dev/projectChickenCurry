@@ -44,7 +44,7 @@ class startMenuButton{
 class startMenu
 {
   public:
-    startMenu(Setup *passed_setup,bool *passed_quit,componentState *passed_state1,componentState *passed_state2,componentState *passed_state3);
+    startMenu(Setup *passed_setup,bool *passed_quit,componentState *passed_state1,componentState *passed_state2,componentState *passed_state3,audioManager *passed_audio);
     ~startMenu();
 
   void draw();
@@ -98,5 +98,7 @@ class startMenu
     unsigned int inputTextTimer;
     SDL_Rect promptTextRect;
     SDL_Rect inputTextRect;
+
+    audioManager *audio;
 
 };

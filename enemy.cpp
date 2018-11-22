@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp)
+enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp,audioManager *passed_audio)
 {
     sdlSetup = passed_setup;
     lo = passed_lo;
@@ -11,6 +11,8 @@ enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_e
     hp = maxHP;
     gold = passed_gold;
     experience = passed_exp;
+
+    audio = passed_audio;
 
     filePath = "resource/image/enemies/" + enemyName + ".png";
 
@@ -123,6 +125,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             if (passed_mouseState == MOUSE_DOWN)
             {
                 state = ENEMY_ATTACKED;
+                audio->playMelee();
                 damage = lo->getATK() - this->defense;
                 this->hp -= damage;
                 attackedTimer = SDL_GetTicks();
@@ -133,6 +136,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             {
                 state = ENEMY_CASTED;
                 magicPath = "resource/image/damage/flame.png";
+                audio->playFlame();
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
                 lo->setMP(lo->getMP() - 4);
@@ -144,6 +148,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             if (passed_mouseState == MOUSE_DOWN && lo->getMP() >= 4)
             {
                 state = ENEMY_CASTED;
+                audio->playFreeze();
                 magicPath = "resource/image/damage/blizzard.png";
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
@@ -156,6 +161,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             if (passed_mouseState == MOUSE_DOWN && lo->getMP() >= 7)
             {
                 state = ENEMY_CASTED;
+                audio->playArcane();
                 magicPath = "resource/image/damage/arcane bolt.png";
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
@@ -168,6 +174,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             if (passed_mouseState == MOUSE_DOWN && lo->getMP() >= 10)
             {
                 state = ENEMY_CASTED;
+                audio->playCurse();
                 magicPath = "resource/image/damage/phantom strike.png";
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();

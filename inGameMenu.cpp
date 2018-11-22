@@ -226,10 +226,12 @@ void mButton::drawMenuButtonWithUpgradeIcon()
     }
 }
 
-inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo)
+inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio)
 {
     sdlSetup = passed_setup;
     lo = passed_lo;
+
+    audio = passed_audio;
 
     stateMenu = OFF;
 
@@ -473,6 +475,7 @@ void inGameMenu::handlingEvent()
         if (menuButtons[0]->getCurrentMouseState() == MOUSE_DOWN && itemScreenState == OFF && SDL_GetTicks() - itemScreenTimer > 300)
         {
             itemScreenState = ON;
+            audio ->playClick();
             itemScreenTimer = SDL_GetTicks();
             if (characterSummaryState == ON)
             {
@@ -482,12 +485,14 @@ void inGameMenu::handlingEvent()
 
         if (menuButtons[0]->getCurrentMouseState() == MOUSE_DOWN && itemScreenState == ON && SDL_GetTicks() - itemScreenTimer > 300)
         {
+            audio ->playClick();
             itemScreenState = OFF;
             itemScreenTimer = SDL_GetTicks();
         }
 
         if (menuButtons[1]->getCurrentMouseState() == MOUSE_DOWN && characterSummaryState == OFF && SDL_GetTicks() - characterSummaryTimer > 300)
         {
+            audio ->playClick();
             characterSummaryState = ON;
             characterSummaryTimer = SDL_GetTicks();
             if (itemScreenState == ON)
@@ -498,9 +503,17 @@ void inGameMenu::handlingEvent()
 
         if (menuButtons[1]->getCurrentMouseState() == MOUSE_DOWN && characterSummaryState == ON && SDL_GetTicks() - characterSummaryTimer > 300)
         {
+            audio ->playClick();
             characterSummaryState = OFF;
             characterSummaryTimer = SDL_GetTicks();
         }
+
+        if (menuButtons[2]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - saveTimer > 300)
+        {
+            audio ->playSave();
+            saveTimer = SDL_GetTicks();
+        }
+
 
         if (itemScreenState == ON)
         {
@@ -589,6 +602,7 @@ void inGameMenu::drawCharacterSummary()
     }
 
     if(upgradeButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        audio ->playClick();
         if(lo->getPerk()>0){
             lo->setPerk(lo->getPerk()-1);
             lo->setMaxHP(lo->getMaxHP()+1);
@@ -597,6 +611,7 @@ void inGameMenu::drawCharacterSummary()
     }
 
     if(upgradeButtons[1]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        audio ->playClick();
         if(lo->getPerk()>0){
             lo->setPerk(lo->getPerk()-1);
             lo->setMaxMP(lo->getMaxMP()+1);
@@ -605,6 +620,7 @@ void inGameMenu::drawCharacterSummary()
     }
 
     if(upgradeButtons[2]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        audio ->playClick();
         if(lo->getPerk()>0){
             lo->setPerk(lo->getPerk()-1);
             lo->setATK(lo->getATK()+1);
@@ -613,6 +629,7 @@ void inGameMenu::drawCharacterSummary()
     }
 
     if(upgradeButtons[3]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        audio ->playClick();
         if(lo->getPerk()>0){
             lo->setPerk(lo->getPerk()-1);
             lo->setDEF(lo->getDEF()+1);
@@ -621,6 +638,7 @@ void inGameMenu::drawCharacterSummary()
     }
 
     if(upgradeButtons[4]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks()-upgradeTimer>300){
+        audio ->playClick();
         if(lo->getPerk()>0){
             lo->setPerk(lo->getPerk()-1);
             lo->setINT(lo->getINT()+1);
@@ -681,6 +699,7 @@ void inGameMenu::drawItemScreen()
 
     if (useButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - useTimer > 300 && !(lo->getHP() == lo->getMaxHP()))
     {
+        audio ->playClick();
         lo->setPotionAmout(lo->getPotionAmout() - 1);
         lo->setHP(lo->getHP() + 10);
         if (lo->getHP() > lo->getMaxHP())
@@ -696,6 +715,7 @@ void inGameMenu::drawItemScreen()
 
     if (useButtons[1]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - useTimer > 300 && !(lo->getMP() == lo->getMaxMP()))
     {
+        audio ->playClick();
         lo->setElixirAmout(lo->getElixirAmout() - 1);
         lo->setMP(lo->getMP() + 10);
         if (lo->getMP() > lo->getMaxMP())
@@ -723,6 +743,7 @@ void inGameMenu::drawItemScreen()
 
     if (buyButtons[0]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - buyTimer > 300)
     {
+        audio ->playClick();
         if (lo->getGold() >= 10)
         {
             lo->setGold(lo->getGold() - 10);
@@ -733,6 +754,7 @@ void inGameMenu::drawItemScreen()
 
     if (buyButtons[1]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - buyTimer > 300)
     {
+        audio ->playClick();
         if (lo->getGold() >= 20)
         {
             lo->setGold(lo->getGold() - 20);
