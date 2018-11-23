@@ -134,11 +134,13 @@ void startMenuButton::drawMenuButton()
     }
 }
 
-startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3,audioManager *passed_audio)
+startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3,audioManager *passed_audio,mainCharacter *passed_lo)
 {
     sdlSetup = passed_setup;
     quit = passed_quit;
     mainGameLoopState = passed_state1;
+
+    lo=passed_lo;
 
     audio=passed_audio;
 
@@ -224,6 +226,13 @@ void startMenu::draw()
     {
         *introState1 = ON;
         audio->playClick();
+    }
+
+    if(buttonContinue->getCurrentMouseState() == MOUSE_DOWN)
+    {
+        audio->playClick();
+        lo->loadGame();
+        *mainGameLoopState = ON;
     }
 
     if (buttonExit->getCurrentMouseState() == MOUSE_DOWN)

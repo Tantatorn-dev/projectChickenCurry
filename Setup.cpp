@@ -101,3 +101,7 @@ void Setup::clearText(){
 void Setup::setPlayerName(std::string passed_name){
     playerName=passed_name;
 }
+
+std::string Setup::getPlayerName(){
+    return playerName;
+}

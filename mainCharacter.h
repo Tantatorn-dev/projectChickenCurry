@@ -8,6 +8,11 @@
 #include "Setup.h"
 #include "collisionRectangle.h"
 #include "worldMap.h"
+#include <fstream>
+#include <iomanip>
+
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
 
 //define the directions of main character
 #define STILL 0
@@ -25,9 +30,12 @@ class mainCharacter{
     public:
     mainCharacter(Setup *passed_setup,float *cameraX,float *cameraY,worldMap* passed_Map);
     ~mainCharacter();
+
     void draw();
     void update();
     void directionPlayAnimation(int passed_direction);
+
+    void setCamera(int x,int y);
 
     int getMaxHP();
     void setMaxHP(int passed_maxHP);
@@ -73,6 +81,10 @@ class mainCharacter{
 
     int getPerk();
     void setPerk(int passed_perk);
+
+    void saveGame();
+    void loadGame();
+
     private:
     worldMap* Map;
 
@@ -113,4 +125,7 @@ class mainCharacter{
     struct item elixir={"elixir",5};
 
     int perk;
+
+    json saveFile;
+    
 };

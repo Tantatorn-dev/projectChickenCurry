@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 #include "audioManager.h"
 #include "Setup.h"
+#include "mainCharacter.h"
 
 class startMenuButton{
   public:
@@ -44,7 +45,7 @@ class startMenuButton{
 class startMenu
 {
   public:
-    startMenu(Setup *passed_setup,bool *passed_quit,componentState *passed_state1,componentState *passed_state2,componentState *passed_state3,audioManager *passed_audio);
+    startMenu(Setup *passed_setup,bool *passed_quit,componentState *passed_state1,componentState *passed_state2,componentState *passed_state3,audioManager *passed_audio,mainCharacter *passed_lo);
     ~startMenu();
 
   void draw();
@@ -101,4 +102,5 @@ class startMenu
 
     audioManager *audio;
 
+    mainCharacter *lo;
 };

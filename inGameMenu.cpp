@@ -511,6 +511,7 @@ void inGameMenu::handlingEvent()
         if (menuButtons[2]->getCurrentMouseState() == MOUSE_DOWN && SDL_GetTicks() - saveTimer > 300)
         {
             audio ->playSave();
+            lo->saveGame();
             saveTimer = SDL_GetTicks();
         }
 

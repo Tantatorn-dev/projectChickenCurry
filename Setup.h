@@ -43,6 +43,7 @@ public:
   void clearText();
 
   void setPlayerName(std::string passed_name);
+  std::string getPlayerName();
 
 private:
   SDL_Window *window;

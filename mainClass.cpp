@@ -11,22 +11,20 @@ mainClass ::mainClass()
 
     audio = new audioManager();
 
-    sMenu = new startMenu(sdlSetup, &quit,&mainGameLoopState,&introState1,&introState2,audio);
+    wmap = new worldMap(sdlSetup, &cameraX, &cameraY);
+    Lo = new mainCharacter(sdlSetup, &cameraX, &cameraY, wmap);
+    sMenu = new startMenu(sdlSetup, &quit, &mainGameLoopState, &introState1, &introState2, audio, Lo);
 
     srand(time(NULL));
 
-    wmap = new worldMap(sdlSetup, &cameraX, &cameraY);
-    Lo = new mainCharacter(sdlSetup, &cameraX, &cameraY, wmap);
-
-    menu = new inGameMenu(sdlSetup, Lo,audio);
-    combatScene = new battleScene(sdlSetup, Lo,audio);
-
+    menu = new inGameMenu(sdlSetup, Lo, audio);
+    combatScene = new battleScene(sdlSetup, Lo, audio);
 
     audio->start();
 
     mainGameLoopState = OFF;
     introState1 = OFF;
-    introState2= OFF;
+    introState2 = OFF;
 }
 
 mainClass ::~mainClass()
@@ -49,7 +47,6 @@ void mainClass::gameLoop()
     {
         sdlSetup->begin();
 
-
         if (mainGameLoopState == ON)
         {
             wmap->drawBack();
@@ -58,22 +55,24 @@ void mainClass::gameLoop()
             Lo->update();
 
             wmap->drawFront();
-            
+
             combatScene->handlingEvent();
             menu->handlingEvent();
-            
+
             Lo->drawHUD();
             Lo->levelUp();
         }
-        else if(introState2 == ON && SDL_GetTicks()-introTimer>300){
+        else if (introState2 == ON && SDL_GetTicks() - introTimer > 300)
+        {
             sMenu->drawPrologue();
         }
-        else if(introState1 == ON){
+        else if (introState1 == ON)
+        {
             sMenu->drawEnterNameScreen();
-            introTimer=SDL_GetTicks();
-            
+            introTimer = SDL_GetTicks();
         }
-        else if(introState1 == OFF && introState2==OFF){
+        else if (introState1 == OFF && introState2 == OFF)
+        {
             sMenu->draw();
         }
 

@@ -387,3 +387,63 @@ void mainCharacter::levelUp()
         perk+=10;
     }
 }
+
+void mainCharacter::saveGame(){
+    saveFile["playerName"] = sdlSetup->getPlayerName();
+
+    saveFile["hp"] = 23;
+    saveFile["maxHP"] = maxHP;
+    saveFile["mp"] = mp;
+    saveFile["maxMP"] =maxMP;
+    saveFile["gold"] = gold;
+    saveFile["level"] = level;
+    saveFile["experience"] = experience;
+    saveFile["perk"] = perk;
+    saveFile["attack"]=attack;
+    saveFile["defense"]=defense;
+    saveFile["intelligence"] = intelligence;
+
+    saveFile["PosX"]= Lo->getX();
+    saveFile["PosY"]= Lo->getY();
+
+    saveFile["potion"]=potion.itemAmout;
+    saveFile["elixir"]=potion.itemAmout;
+    
+
+    std::ofstream o("saveFile.json");
+    o<<std::setw(4)<<saveFile.dump()<<std::endl;
+}
+
+void mainCharacter::loadGame(){
+    std::ifstream i("saveFile.json");
+    
+    saveFile = json::parse(i);
+
+    Lo->setX(saveFile["PosX"]);
+    Lo->setY(saveFile["PosY"]);
+
+    setCamera(Lo->getX(),Lo->getY());
+
+    sdlSetup->setPlayerName(saveFile["playerName"]);
+
+
+    gold =saveFile["gold"];
+    hp=saveFile["hp"];
+    maxHP=saveFile["maxHP"];
+    mp=saveFile["mp"];
+    maxMP=saveFile["maxMP"];
+    experience = saveFile["experience"];
+    level=saveFile["level"];
+    attack = saveFile["attack"];
+    defense = saveFile["defense"];
+    intelligence = saveFile["intelligence"];
+    perk = saveFile["perk"];
+
+    potion.itemAmout=saveFile["potion"];
+    elixir.itemAmout=saveFile["elixir"];
+}
+
+void mainCharacter::setCamera(int x,int y){
+    *cameraX = *cameraX +1200-x;
+    *cameraY = *cameraY +900-y;
+}

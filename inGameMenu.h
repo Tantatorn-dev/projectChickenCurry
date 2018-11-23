@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+
 const SDL_Color BLACK = {0, 0, 0};
 
 enum iconState {
