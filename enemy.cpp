@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp,audioManager *passed_audio)
+enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp, audioManager *passed_audio, int width, int height, componentState bossState)
 {
     sdlSetup = passed_setup;
     lo = passed_lo;
@@ -14,7 +14,14 @@ enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_e
 
     audio = passed_audio;
 
-    filePath = "resource/image/enemies/" + enemyName + ".png";
+    if (bossState == ON)
+    {
+        filePath = "resource/image/bosses/" + enemyName + ".png";
+    }
+    else
+    {
+        filePath = "resource/image/enemies/" + enemyName + ".png";
+    }
 
     enemyTexture = NULL;
     enemyTexture = IMG_LoadTexture(sdlSetup->getRenderer(), filePath.c_str());
@@ -29,10 +36,19 @@ enemy::enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_e
     nameRect.w = 100;
     nameRect.h = 20;
 
-    enemyRect.x = 360;
-    enemyRect.y = 300;
-    enemyRect.w = 150;
-    enemyRect.h = 120;
+    if (bossState == ON)
+    {
+        enemyRect.x = 260;
+        enemyRect.y = 160;
+    }
+    else
+    {
+        enemyRect.x = 360;
+        enemyRect.y = 300;
+    }
+
+    enemyRect.w = width;
+    enemyRect.h = height;
 
     textColorWhite = {255, 255, 255};
     textColorLightRed = {200, 0, 0};
@@ -194,13 +210,15 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
     {
         state = ENEMY_ATTACKING;
         attackingTimer = SDL_GetTicks();
-        lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
         if (this->hp <= 0)
         {
             state = ENEMY_DEATH;
             deathTimer = SDL_GetTicks();
             lo->setExp(lo->getExp() + experience);
             lo->setGold(lo->getGold() + gold);
+        }
+        else{
+            lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
         }
     }
     else if (state == ENEMY_CASTED && SDL_GetTicks() - attackedTimer > 2000)
@@ -209,13 +227,15 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
         magicTexture = NULL;
         state = ENEMY_ATTACKING;
         attackingTimer = SDL_GetTicks();
-        lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
         if (this->hp <= 0)
         {
             state = ENEMY_DEATH;
             deathTimer = SDL_GetTicks();
             lo->setExp(lo->getExp() + experience);
             lo->setGold(lo->getGold() + gold);
+        }
+        else{
+            lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
         }
     }
     else if (state == ENEMY_ATTACKING && SDL_GetTicks() - attackingTimer > 4000)

@@ -23,6 +23,12 @@ public:
   sprite** getRiver1(){return river1Background;}
   sprite* getWaterfall(){return waterfallBackground;}
 
+  sprite* getSummonCircleGreen(){return summonCircleGreen;}
+  sprite* getSummonCircleBlue(){return summonCircleBlue;}
+  sprite* getSummonCirclePurple(){return summonCirclePurple;}
+  sprite* getSummonCircleRed(){return summonCircleRed;}
+
+
 private:
   Setup *sdlSetup;
 
@@ -38,6 +44,11 @@ private:
   sprite *river1Background[4];
   sprite *river1Sprite[4];
 
+  sprite *summonCircleGreen;
+  sprite *summonCircleRed;
+  sprite *summonCirclePurple;
+  sprite *summonCircleBlue;
+  
 
   int treePosition[20]={
                 800,730,

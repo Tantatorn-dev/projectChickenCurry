@@ -85,6 +85,9 @@ class mainCharacter{
     void saveGame();
     void loadGame();
 
+    enemyType eType;
+    bool bossKilled[4];
+
     private:
     worldMap* Map;
 
@@ -127,5 +130,15 @@ class mainCharacter{
     int perk;
 
     json saveFile;
+
+    unsigned int bossTimer;
+    
+    void checkInCircle();
+
+    void drawInteractPrompt();
+    SDL_Texture *spacebar;
+    SDL_Rect spacebarRect;
+    SDL_Rect interactRect;
+    
     
 };

@@ -50,6 +50,18 @@ mainCharacter::mainCharacter(Setup *passed_setup, float *passed_cameraX, float *
     levelTextRect.h = 30;
 
     perk = 0;
+
+    spacebar = NULL;
+    spacebar = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/spacebar.png");
+    spacebarRect = {320, 250, 200, 50};
+    interactRect = {365, 200, 100, 50};
+
+    eType = MINIONS;
+
+    for (int i = 0; i < 4; i++)
+    {
+        bossKilled[i] = false;
+    }
 }
 
 mainCharacter::~mainCharacter()
@@ -61,6 +73,9 @@ mainCharacter::~mainCharacter()
 
     delete cameraX;
     delete cameraY;
+
+    SDL_DestroyTexture(spacebar);
+    spacebar = NULL;
 }
 
 void mainCharacter::draw()
@@ -76,6 +91,8 @@ void mainCharacter::update()
     {
         direction = STILL;
     }
+
+    checkInCircle();
 
     if (sdlSetup->getMainEvent()->type == SDL_KEYDOWN)
     {
@@ -330,7 +347,8 @@ int mainCharacter::getMaxHP()
     return maxHP;
 }
 
-void mainCharacter::setMaxHP(int passed_maxHP){
+void mainCharacter::setMaxHP(int passed_maxHP)
+{
     maxHP = passed_maxHP;
 }
 
@@ -339,7 +357,8 @@ int mainCharacter::getMaxMP()
     return maxMP;
 }
 
-void mainCharacter::setMaxMP(int passed_maxMP){
+void mainCharacter::setMaxMP(int passed_maxMP)
+{
     maxMP = passed_maxMP;
 }
 
@@ -384,66 +403,159 @@ void mainCharacter::levelUp()
     {
         experience = experience - (50 * level);
         level++;
-        perk+=10;
+        perk += 10;
     }
 }
 
-void mainCharacter::saveGame(){
+void mainCharacter::saveGame()
+{
     saveFile["playerName"] = sdlSetup->getPlayerName();
 
     saveFile["hp"] = 23;
     saveFile["maxHP"] = maxHP;
     saveFile["mp"] = mp;
-    saveFile["maxMP"] =maxMP;
+    saveFile["maxMP"] = maxMP;
     saveFile["gold"] = gold;
     saveFile["level"] = level;
     saveFile["experience"] = experience;
     saveFile["perk"] = perk;
-    saveFile["attack"]=attack;
-    saveFile["defense"]=defense;
+    saveFile["attack"] = attack;
+    saveFile["defense"] = defense;
     saveFile["intelligence"] = intelligence;
 
-    saveFile["PosX"]= Lo->getX();
-    saveFile["PosY"]= Lo->getY();
+    saveFile["PosX"] = Lo->getX();
+    saveFile["PosY"] = Lo->getY();
 
-    saveFile["potion"]=potion.itemAmout;
-    saveFile["elixir"]=potion.itemAmout;
-    
+    saveFile["potion"] = potion.itemAmout;
+    saveFile["elixir"] = potion.itemAmout;
 
     std::ofstream o("saveFile.json");
-    o<<std::setw(4)<<saveFile.dump()<<std::endl;
+    o << std::setw(4) << saveFile.dump() << std::endl;
 }
 
-void mainCharacter::loadGame(){
+void mainCharacter::loadGame()
+{
     std::ifstream i("saveFile.json");
-    
+
     saveFile = json::parse(i);
 
     Lo->setX(saveFile["PosX"]);
     Lo->setY(saveFile["PosY"]);
 
-    setCamera(Lo->getX(),Lo->getY());
+    setCamera(Lo->getX(), Lo->getY());
 
     sdlSetup->setPlayerName(saveFile["playerName"]);
 
-
-    gold =saveFile["gold"];
-    hp=saveFile["hp"];
-    maxHP=saveFile["maxHP"];
-    mp=saveFile["mp"];
-    maxMP=saveFile["maxMP"];
+    gold = saveFile["gold"];
+    hp = saveFile["hp"];
+    maxHP = saveFile["maxHP"];
+    mp = saveFile["mp"];
+    maxMP = saveFile["maxMP"];
     experience = saveFile["experience"];
-    level=saveFile["level"];
+    level = saveFile["level"];
     attack = saveFile["attack"];
     defense = saveFile["defense"];
     intelligence = saveFile["intelligence"];
     perk = saveFile["perk"];
 
-    potion.itemAmout=saveFile["potion"];
-    elixir.itemAmout=saveFile["elixir"];
+    potion.itemAmout = saveFile["potion"];
+    elixir.itemAmout = saveFile["elixir"];
 }
 
-void mainCharacter::setCamera(int x,int y){
-    *cameraX = *cameraX +1200-x;
-    *cameraY = *cameraY +900-y;
+void mainCharacter::setCamera(int x, int y)
+{
+    *cameraX = *cameraX + 1200 - x;
+    *cameraY = *cameraY + 900 - y;
+}
+
+void mainCharacter::checkInCircle()
+{
+    if (!bossKilled[0])
+    {
+        if (Lo->isCollide(Map->getSummonCircleGreen()->getCollisionRect()))
+        {
+            Map->getSummonCircleGreen()->summoning = true;
+            drawInteractPrompt();
+            if (sdlSetup->getMainEvent()->key.keysym.sym == SDLK_SPACE)
+            {
+                this->step = 201;
+                this->eType = BOSS_1;
+                Map->getSummonCircleGreen()->destroy();
+                bossKilled[0] = true;
+            }
+        }
+        else
+        {
+            Map->getSummonCircleGreen()->summoning = false;
+        }
+    }
+
+    if (!bossKilled[1])
+    {
+        if (Lo->isCollide(Map->getSummonCircleBlue()->getCollisionRect()))
+        {
+            Map->getSummonCircleBlue()->summoning = true;
+            drawInteractPrompt();
+            if (sdlSetup->getMainEvent()->key.keysym.sym == SDLK_SPACE)
+            {
+                this->step = 201;
+                this->eType = BOSS_2;
+                Map->getSummonCircleBlue()->destroy();
+                bossKilled[1] = true;
+            }
+        }
+        else
+        {
+            Map->getSummonCircleBlue()->summoning = false;
+        }
+    }
+
+    if (!bossKilled[2])
+    {
+        if (Lo->isCollide(Map->getSummonCirclePurple()->getCollisionRect()))
+        {
+            Map->getSummonCirclePurple()->summoning = true;
+            drawInteractPrompt();
+            if (sdlSetup->getMainEvent()->key.keysym.sym == SDLK_SPACE)
+            {
+                this->step = 201;
+                this->eType = BOSS_3;
+                Map->getSummonCirclePurple()->destroy();
+                bossKilled[2] = true;
+            }
+        }
+        else
+        {
+            Map->getSummonCirclePurple()->summoning = false;
+        }
+    }
+
+    if (!bossKilled[3])
+    {
+        if (Lo->isCollide(Map->getSummonCircleRed()->getCollisionRect()))
+        {
+            Map->getSummonCircleRed()->summoning = true;
+            drawInteractPrompt();
+            if (sdlSetup->getMainEvent()->key.keysym.sym == SDLK_SPACE)
+            {
+                this->step = 201;
+                this->eType = BOSS_4;
+                Map->getSummonCircleRed()->destroy();
+                bossKilled[3] = true;
+            }
+        }
+        else
+        {
+            Map->getSummonCircleRed()->summoning = false;
+        }
+    }
+}
+
+void mainCharacter::drawInteractPrompt()
+{
+    SDL_RenderCopy(sdlSetup->getRenderer(), spacebar, NULL, &spacebarRect);
+
+    sdlSetup->loadFromRenderedText("interact", {255, 255, 255}, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &interactRect);
+    sdlSetup->clearText();
 }

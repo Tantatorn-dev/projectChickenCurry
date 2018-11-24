@@ -11,6 +11,7 @@ class sprite
     sprite(SDL_Renderer* passed_renderer, std::string FilePath,int x,int y,int w,int h,float *cameraX,float *cameraY,collisionRectangle passed_collisionRect);
     ~sprite();
     void draw();
+    void destroy();
     
     void setX(int X);
     void setY(int Y);
@@ -19,6 +20,9 @@ class sprite
     void setUpAnimation(int amoutX,int amoutY);
     void playAnimation(int beginFrame,int endFrame,int row,float speed);
     void playAnimationVertical(int beginFrame,int endFrame,int column,float speed);
+    
+    bool summoning;
+    void playSummonCircle();
 
     int getX();
     int getY();

@@ -13,7 +13,6 @@
 #include "enemy.h"
 #include "audioManager.h"
 
-
 class battleButton
 {
 public:
@@ -75,6 +74,7 @@ private:
 
   void drawBackground(); 
 
+
   componentState battleSceneState;
 
   std::vector<battleButton *> battleButtons;
@@ -88,6 +88,7 @@ private:
   void drawSkillButtons();
 
   std::vector<enemy *> enemies;
+  
 
   unsigned int closingBattleSceneTimer;
 

@@ -15,6 +15,14 @@ enum mouseState
   MOUSE_UP = 3
 };
 
+enum enemyType{
+  MINIONS,
+  BOSS_1,
+  BOSS_2,
+  BOSS_3,
+  BOSS_4
+};
+
 enum font
 {
   PXLVETICA,

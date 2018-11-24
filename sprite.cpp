@@ -90,6 +90,18 @@ void sprite::playAnimationVertical(int beginFrame, int endFrame, int column, flo
     }
 }
 
+void sprite::playSummonCircle(){
+    crop.w=imgWidth/2;
+    crop.h=imgHeight;
+    crop.y=0;
+    if(summoning){
+        crop.x=imgWidth/2;
+    }
+    else{
+        crop.x=0;
+    }
+}
+
 void sprite::draw()
 {
     camera.x=rect.x+*cameraX;
@@ -141,3 +153,7 @@ bool sprite::isCollide(collisionRectangle collider){
     return ! (collisionRect.getRectangle().x+collisionRect.getRectangle().w<collider.getRectangle().x || collisionRect.getRectangle().y+collisionRect.getRectangle().h<collider.getRectangle().y ||collisionRect.getRectangle().x>collider.getRectangle().x+collider.getRectangle().h || collisionRect.getRectangle().y>collider.getRectangle().y+collider.getRectangle().h);
 }
 
+void sprite::destroy(){
+    SDL_DestroyTexture(image);
+    SDL_DestroyTexture(collisionImage);
+}

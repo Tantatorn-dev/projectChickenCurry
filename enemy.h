@@ -21,7 +21,7 @@ enum enemyState
 class enemy
 {
 public:
-  enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp,audioManager *passed_audio);
+  enemy(Setup *passed_setup, mainCharacter *passed_lo, std::string passed_enemyName, int passed_attack, int passed_defense, int passed_maxHP, int passed_gold, int passed_exp, audioManager *passed_audio,int width,int height,componentState bossState);
   ~enemy();
 
   void drawUpdate(mouseState passed_mouseState, int button);
@@ -75,7 +75,7 @@ protected:
   SDL_Rect crop;
   unsigned int animationDelay;
   int indexToMagic;
-  
+
   std::string magicPath;
   void playMagicAnimation(int beginFrame, int endFrame, float speed);
   void playDamageAnimation(int beginFrame, int endFrame, float speed);
