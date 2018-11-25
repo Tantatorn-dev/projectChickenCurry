@@ -13,18 +13,20 @@ mainClass ::mainClass()
 
     wmap = new worldMap(sdlSetup, &cameraX, &cameraY);
     Lo = new mainCharacter(sdlSetup, &cameraX, &cameraY, wmap);
-    sMenu = new startMenu(sdlSetup, &quit, &mainGameLoopState, &introState1, &introState2, audio, Lo);
+    sMenu = new startMenu(sdlSetup, &quit, &mainGameLoopState,&introState1, &introState2, audio, Lo);
 
     srand(time(NULL));
 
     menu = new inGameMenu(sdlSetup, Lo, audio);
     combatScene = new battleScene(sdlSetup, Lo, audio);
+    dScreen = new deathScreen(sdlSetup,audio);
 
     audio->start();
 
     mainGameLoopState = OFF;
     introState1 = OFF;
     introState2 = OFF;
+    deathState = OFF;
 }
 
 mainClass ::~mainClass()
@@ -35,6 +37,7 @@ mainClass ::~mainClass()
     delete menu;
     delete combatScene;
     delete sMenu;
+    delete dScreen;
 }
 
 void mainClass::gameLoop()
@@ -61,6 +64,22 @@ void mainClass::gameLoop()
 
             Lo->drawHUD();
             Lo->levelUp();
+            if(Lo->getHP()<=0){
+                mainGameLoopState = OFF;
+                deathState=ON;
+                deathTimer = SDL_GetTicks();
+                audio->playDeathTheme();
+                audio->playOpeningTheme();
+                Lo->resetCharacter();
+            }
+        }
+        else if(deathState == ON){
+            dScreen->draw();
+            if(SDL_GetTicks()-deathTimer>6000){
+                deathState =OFF;
+                introState1 =OFF;
+                introState2 = OFF;
+            }
         }
         else if (introState2 == ON && SDL_GetTicks() - introTimer > 300)
         {
@@ -73,7 +92,7 @@ void mainClass::gameLoop()
         }
         else if (introState1 == OFF && introState2 == OFF)
         {
-            sMenu->draw();
+           sMenu->draw();
         }
 
         sdlSetup->end();

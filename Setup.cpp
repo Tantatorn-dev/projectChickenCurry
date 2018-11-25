@@ -23,9 +23,9 @@ Setup::Setup(bool *quit)
     //setup the event
     mainEvent = new SDL_Event();
 
-    //setup the theme songs
-    
-    //Mix_PlayMusic(mainTheme,-1);
+    for(int i=0;i<4;i++){
+        bossKilled[i] =false;
+    }
 }
 
 Setup::~Setup()

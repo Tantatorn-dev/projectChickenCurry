@@ -57,11 +57,6 @@ mainCharacter::mainCharacter(Setup *passed_setup, float *passed_cameraX, float *
     interactRect = {365, 200, 100, 50};
 
     eType = MINIONS;
-
-    for (int i = 0; i < 4; i++)
-    {
-        bossKilled[i] = false;
-    }
 }
 
 mainCharacter::~mainCharacter()
@@ -76,6 +71,33 @@ mainCharacter::~mainCharacter()
 
     SDL_DestroyTexture(spacebar);
     spacebar = NULL;
+}
+
+void mainCharacter::resetCharacter()
+{
+    level = 1;
+    experience = 0;
+    maxHP = 60;
+    maxMP = 20;
+    hp = maxHP;
+    mp = maxMP;
+    attack = 10;
+    defense = 5;
+    gold = 100;
+    intelligence = 8;
+
+    perk = 0;
+
+    Lo->setX(1200);
+    Lo->setY(900);
+
+    for (int i = 0; i < 4; i++)
+    {
+        sdlSetup->bossKilled[i] = false;
+    }
+
+    *cameraX = -800;
+    *cameraY = -600;
 }
 
 void mainCharacter::draw()
@@ -429,6 +451,11 @@ void mainCharacter::saveGame()
     saveFile["potion"] = potion.itemAmout;
     saveFile["elixir"] = potion.itemAmout;
 
+    saveFile["bossKilled1"] = sdlSetup->bossKilled[0];
+    saveFile["bossKilled2"] = sdlSetup->bossKilled[1];
+    saveFile["bossKilled3"] = sdlSetup->bossKilled[2];
+    saveFile["bossKilled4"] = sdlSetup->bossKilled[3];
+
     std::ofstream o("saveFile.json");
     o << std::setw(4) << saveFile.dump() << std::endl;
 }
@@ -458,6 +485,11 @@ void mainCharacter::loadGame()
     intelligence = saveFile["intelligence"];
     perk = saveFile["perk"];
 
+    sdlSetup->bossKilled[0] = saveFile["bossKilled1"];
+    sdlSetup->bossKilled[1] = saveFile["bossKilled2"];
+    sdlSetup->bossKilled[2] = saveFile["bossKilled3"];
+    sdlSetup->bossKilled[3] = saveFile["bossKilled4"];
+
     potion.itemAmout = saveFile["potion"];
     elixir.itemAmout = saveFile["elixir"];
 }
@@ -470,7 +502,7 @@ void mainCharacter::setCamera(int x, int y)
 
 void mainCharacter::checkInCircle()
 {
-    if (!bossKilled[0])
+    if (!sdlSetup->bossKilled[0])
     {
         if (Lo->isCollide(Map->getSummonCircleGreen()->getCollisionRect()))
         {
@@ -481,7 +513,7 @@ void mainCharacter::checkInCircle()
                 this->step = 201;
                 this->eType = BOSS_1;
                 Map->getSummonCircleGreen()->destroy();
-                bossKilled[0] = true;
+                sdlSetup->bossKilled[0] = true;
             }
         }
         else
@@ -490,7 +522,7 @@ void mainCharacter::checkInCircle()
         }
     }
 
-    if (!bossKilled[1])
+    if (!sdlSetup->bossKilled[1])
     {
         if (Lo->isCollide(Map->getSummonCircleBlue()->getCollisionRect()))
         {
@@ -501,7 +533,7 @@ void mainCharacter::checkInCircle()
                 this->step = 201;
                 this->eType = BOSS_2;
                 Map->getSummonCircleBlue()->destroy();
-                bossKilled[1] = true;
+                sdlSetup->bossKilled[1] = true;
             }
         }
         else
@@ -510,7 +542,7 @@ void mainCharacter::checkInCircle()
         }
     }
 
-    if (!bossKilled[2])
+    if (!sdlSetup->bossKilled[2])
     {
         if (Lo->isCollide(Map->getSummonCirclePurple()->getCollisionRect()))
         {
@@ -521,7 +553,7 @@ void mainCharacter::checkInCircle()
                 this->step = 201;
                 this->eType = BOSS_3;
                 Map->getSummonCirclePurple()->destroy();
-                bossKilled[2] = true;
+                sdlSetup->bossKilled[2] = true;
             }
         }
         else
@@ -530,7 +562,7 @@ void mainCharacter::checkInCircle()
         }
     }
 
-    if (!bossKilled[3])
+    if (!sdlSetup->bossKilled[3])
     {
         if (Lo->isCollide(Map->getSummonCircleRed()->getCollisionRect()))
         {
@@ -541,12 +573,36 @@ void mainCharacter::checkInCircle()
                 this->step = 201;
                 this->eType = BOSS_4;
                 Map->getSummonCircleRed()->destroy();
-                bossKilled[3] = true;
+                sdlSetup->bossKilled[3] = true;
             }
         }
         else
         {
             Map->getSummonCircleRed()->summoning = false;
+        }
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (sdlSetup->bossKilled[i])
+        {
+            switch (i)
+            {
+            case 0:
+                Map->getSummonCircleGreen()->destroy();
+                break;
+            case 1:
+                Map->getSummonCircleBlue()->destroy();
+                break;
+            case 2:
+                Map->getSummonCirclePurple()->destroy();
+                break;
+            case 3:
+                Map->getSummonCircleRed()->destroy();
+                break;
+            default:
+                break;
+            }
         }
     }
 }

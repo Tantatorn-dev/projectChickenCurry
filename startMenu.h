@@ -89,6 +89,7 @@ class startMenu
     startMenuButton *buttonContinue;
     startMenuButton *buttonExit;
 
+    componentState *startState;
     componentState *mainGameLoopState;
     componentState *introState1;
     componentState *introState2;

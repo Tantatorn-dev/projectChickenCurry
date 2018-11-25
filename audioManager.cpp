@@ -8,6 +8,13 @@ audioManager::audioManager()
     battleTheme = NULL;
     opTheme = NULL;
 
+    boss1Theme=NULL;
+    boss2Theme=NULL;
+    boss3Theme=NULL;
+    boss4Theme=NULL;
+
+    deathTheme =NULL;
+
     click = NULL;
     save = NULL;
     flamethrower = NULL;
@@ -15,6 +22,7 @@ audioManager::audioManager()
     freeze = NULL;
     sword_sound = NULL;
     spell = NULL;
+    hurt = NULL;
 }
 
 audioManager::~audioManager()
@@ -27,6 +35,21 @@ audioManager::~audioManager()
 
     Mix_FreeMusic(opTheme);
     opTheme = NULL;
+
+    Mix_FreeMusic(boss1Theme);
+    boss1Theme =NULL;
+
+    Mix_FreeMusic(boss1Theme);
+    boss1Theme =NULL;
+
+    Mix_FreeMusic(boss1Theme);
+    boss1Theme =NULL;
+
+    Mix_FreeMusic(boss1Theme);
+    boss1Theme =NULL;
+
+    Mix_FreeChunk(deathTheme);
+    deathTheme =NULL;
 
     Mix_FreeChunk(click);
     click = NULL;
@@ -48,6 +71,9 @@ audioManager::~audioManager()
 
     Mix_FreeChunk(spell);
     spell = NULL;
+
+    Mix_FreeChunk(hurt);
+    hurt =NULL;
 }
 
 void audioManager::start()
@@ -60,6 +86,14 @@ void audioManager::start()
     battleTheme = Mix_LoadMUS("resource/music/battleTheme.mp3");
     opTheme = Mix_LoadMUS("resource/music/opTheme.ogg");
 
+    boss1Theme = Mix_LoadMUS("resource/music/bossTheme1.mp3");
+    boss2Theme = Mix_LoadMUS("resource/music/bossTheme2.mp3");
+    boss3Theme = Mix_LoadMUS("resource/music/bossTheme3.mp3");
+    boss4Theme = Mix_LoadMUS("resource/music/bossTheme3.mp3");
+
+    deathTheme = Mix_LoadWAV("resource/music/deathTheme.mp3");
+    
+
     click = Mix_LoadWAV("resource/sound/click.wav");
     save = Mix_LoadWAV("resource/sound/save.wav");
     flamethrower = Mix_LoadWAV("resource/sound/flamethrower.ogg");
@@ -67,6 +101,7 @@ void audioManager::start()
     freeze = Mix_LoadWAV("resource/sound/freeze.ogg");
     sword_sound = Mix_LoadWAV("resource/sound/sword_sound.wav");
     spell = Mix_LoadWAV("resource/sound/spell.ogg");
+    hurt = Mix_LoadWAV("resource/sound/hurt.mp3");
 }
 
 void audioManager::stopMusic()
@@ -117,3 +152,31 @@ void audioManager::playCurse(){
 void audioManager::playSave(){
     Mix_PlayChannel(-1,save,0);
 }
+
+void audioManager::playBossTheme(int nBoss){
+    switch(nBoss){
+        case 1:
+        Mix_PlayMusic(boss1Theme,-1);
+        break;
+        case 2:
+        Mix_PlayMusic(boss2Theme,-1);
+        break;
+        case 3:
+        Mix_PlayMusic(boss3Theme,-1);
+        break;
+        case 4:
+        Mix_PlayMusic(boss4Theme,-1);
+        break;
+        default:
+        break;
+    }
+}
+
+void audioManager::playDeathTheme(){
+    Mix_PlayChannel(-1,deathTheme,0);
+}
+
+void audioManager::playHurt(){
+    Mix_PlayChannel(-1,hurt,0);
+}
+

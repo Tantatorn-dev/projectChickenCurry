@@ -10,6 +10,7 @@
 #include "worldMap.h"
 #include <fstream>
 #include <iomanip>
+#include "audioManager.h"
 
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;
@@ -28,8 +29,11 @@ struct item{
 
 class mainCharacter{
     public:
-    mainCharacter(Setup *passed_setup,float *cameraX,float *cameraY,worldMap* passed_Map);
+    mainCharacter(Setup *passed_setup,float *cameraX,float *cameraY,worldMap *passed_Map);
     ~mainCharacter();
+
+
+    void resetCharacter();
 
     void draw();
     void update();
@@ -86,10 +90,9 @@ class mainCharacter{
     void loadGame();
 
     enemyType eType;
-    bool bossKilled[4];
 
     private:
-    worldMap* Map;
+    worldMap *Map;
 
     float *cameraX;
     float *cameraY;
@@ -97,6 +100,8 @@ class mainCharacter{
     Setup *sdlSetup;
 
     sprite *Lo;
+
+    json saveFile;
 
     int direction;
     int prevDirection;
@@ -129,7 +134,7 @@ class mainCharacter{
 
     int perk;
 
-    json saveFile;
+    
 
     unsigned int bossTimer;
     

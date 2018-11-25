@@ -220,25 +220,25 @@ void battleScene::handlingEvent()
         case BOSS_1:
             battleSceneState = ON;
             randIndex = 5;
-            audio->playBattleTheme();
+            audio->playBossTheme(1);
             Lo->eType = MINIONS;
             break;
         case BOSS_2:
             battleSceneState = ON;
             randIndex = 6;
-            audio->playBattleTheme();
+            audio->playBossTheme(2);
             Lo->eType = MINIONS;
             break;
         case BOSS_3:
             battleSceneState = ON;
             randIndex = 7;
-            audio->playBattleTheme();
+            audio->playBossTheme(3);
             Lo->eType = MINIONS;
             break;
         case BOSS_4:
             battleSceneState = ON;
             randIndex = 8;
-            audio->playBattleTheme();
+            audio->playBossTheme(4);
             Lo->eType = MINIONS;
             break;
         default:
@@ -280,6 +280,11 @@ void battleScene::handlingEvent()
             audio->playClick();
             clickTimer = SDL_GetTicks();
         }
+    }
+
+    if(Lo->getHP()<=0){
+        battleSceneState =OFF;
+        Lo->setStep();
     }
 
     if (enemies[randIndex]->getEnemyState() == ENEMY_VANISH)

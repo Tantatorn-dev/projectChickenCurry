@@ -35,16 +35,16 @@ worldMap::worldMap(Setup *sdlSetup, float *cameraX, float *cameraY)
         river1Sprite[i]->setUpAnimation(6, 1);
     }
 
-    soldiers.push_back(new npc(sdlSetup,"resource/image/npc/soldier.png",940,800,cameraX,cameraY));
-     
-    summonCircleGreen = new sprite(sdlSetup->getRenderer(),"resource/image/world_map/summon_circle_1.png",1400,1400,400,400,cameraX,cameraY,collisionRectangle(0,0,400,400));
-    summonCircleGreen->setUpAnimation(2,1);
-    summonCircleBlue = new sprite(sdlSetup->getRenderer(),"resource/image/world_map/summon_circle_4.png",2000,1400,400,400,cameraX,cameraY,collisionRectangle(0,0,400,400));
-    summonCircleBlue->setUpAnimation(2,1);
-    summonCirclePurple=new sprite(sdlSetup->getRenderer(),"resource/image/world_map/summon_circle_3.png",1400,2000,400,400,cameraX,cameraY,collisionRectangle(0,0,400,400));
-    summonCirclePurple->setUpAnimation(2,1);
-    summonCircleRed = new sprite(sdlSetup->getRenderer(),"resource/image/world_map/summon_circle_2.png",2000,2000,400,400,cameraX,cameraY,collisionRectangle(0,0,400,400));
-    summonCircleRed->setUpAnimation(2,1);
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 940, 800, cameraX, cameraY));
+
+    summonCircleGreen = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/summon_circle_1.png", 1400, 1400, 400, 400, cameraX, cameraY, collisionRectangle(0, 0, 400, 400));
+    summonCircleGreen->setUpAnimation(2, 1);
+    summonCircleBlue = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/summon_circle_4.png", 2000, 1400, 400, 400, cameraX, cameraY, collisionRectangle(0, 0, 400, 400));
+    summonCircleBlue->setUpAnimation(2, 1);
+    summonCirclePurple = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/summon_circle_3.png", 1400, 2000, 400, 400, cameraX, cameraY, collisionRectangle(0, 0, 400, 400));
+    summonCirclePurple->setUpAnimation(2, 1);
+    summonCircleRed = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/summon_circle_2.png", 2000, 2000, 400, 400, cameraX, cameraY, collisionRectangle(0, 0, 400, 400));
+    summonCircleRed->setUpAnimation(2, 1);
 }
 
 worldMap::~worldMap()
@@ -77,7 +77,6 @@ worldMap::~worldMap()
         delete river1Sprite[i];
     }
 
-    
     soldiers.clear();
 
     delete cameraX;
@@ -126,18 +125,29 @@ void worldMap::drawBack()
 
     soldiers[0]->walkLeftRight(100);
 
-    summonCircleGreen->playSummonCircle();
-    summonCircleGreen->draw();
+    if (!(sdlSetup->bossKilled[0]))
+    {
+        summonCircleGreen->playSummonCircle();
+        summonCircleGreen->draw();
+    }
 
-    summonCircleBlue->playSummonCircle();
-    summonCircleBlue->draw();
+    if (!(sdlSetup->bossKilled[1]))
+    {
+        summonCircleBlue->playSummonCircle();
+        summonCircleBlue->draw();
+    }
 
-    summonCirclePurple->playSummonCircle();
-    summonCirclePurple->draw();
+    if (!(sdlSetup->bossKilled[2]))
+    {
+        summonCirclePurple->playSummonCircle();
+        summonCirclePurple->draw();
+    }
 
-    summonCircleRed->playSummonCircle();
-    summonCircleRed->draw();
-
+    if (!(sdlSetup->bossKilled[3]))
+    {
+        summonCircleRed->playSummonCircle();
+        summonCircleRed->draw();
+    }
 }
 
 void worldMap::drawFront()
@@ -147,3 +157,4 @@ void worldMap::drawFront()
         (*i)->drawCrown();
     }
 }
+

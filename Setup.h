@@ -53,6 +53,8 @@ public:
   void setPlayerName(std::string passed_name);
   std::string getPlayerName();
 
+  bool bossKilled[4];
+
 private:
   SDL_Window *window;
   SDL_Renderer *renderer;

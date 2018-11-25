@@ -210,6 +210,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
     {
         state = ENEMY_ATTACKING;
         attackingTimer = SDL_GetTicks();
+        audio->playHurt();
         if (this->hp <= 0)
         {
             state = ENEMY_DEATH;
@@ -226,6 +227,7 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
         SDL_DestroyTexture(magicTexture);
         magicTexture = NULL;
         state = ENEMY_ATTACKING;
+        audio->playHurt();
         attackingTimer = SDL_GetTicks();
         if (this->hp <= 0)
         {
