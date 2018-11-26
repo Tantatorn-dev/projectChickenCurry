@@ -43,6 +43,15 @@ class startMenuButton{
 
 };
 
+class sort_indices
+{
+   private:
+     int* mparr;
+   public:
+     sort_indices(int* parr) : mparr(parr) {}
+     bool operator()(int i, int j) const { return mparr[i]>mparr[j]; }
+};
+
 class startMenu
 {
   public:
@@ -116,7 +125,17 @@ class startMenu
     SDL_Rect leaderBox;
     SDL_Rect leaderTextRect;
     SDL_Rect nLeaderRect[5];
+    SDL_Rect nameRect[5];
+    SDL_Rect scoreRect[5];
     SDL_Rect saveText;
+
+    std::string names[5];
+    int score[5];
+    int indices[5]={0,1,2,3,4};
+
+    void sort();
+
+  
 
     unsigned int saveTimer;
 };

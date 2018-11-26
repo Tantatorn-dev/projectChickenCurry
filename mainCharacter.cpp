@@ -57,6 +57,7 @@ mainCharacter::mainCharacter(Setup *passed_setup, float *passed_cameraX, float *
     interactRect = {365, 200, 100, 50};
 
     eType = MINIONS;
+
 }
 
 mainCharacter::~mainCharacter()
@@ -218,19 +219,19 @@ void mainCharacter::directionPlayAnimation(int passed_direction)
 {
     if (passed_direction == DOWN)
     {
-        Lo->playAnimation(0, 3, 0, 500.00);
+        Lo->playAnimation(0, 3, 0, 300.00);
     }
     else if (passed_direction == RIGHT)
     {
-        Lo->playAnimation(0, 3, 1, 500.00);
+        Lo->playAnimation(0, 3, 1, 300.00);
     }
     else if (passed_direction == UP)
     {
-        Lo->playAnimation(0, 3, 2, 500.00);
+        Lo->playAnimation(0, 3, 2, 300.00);
     }
     else if (passed_direction == LEFT)
     {
-        Lo->playAnimation(0, 3, 3, 500.00);
+        Lo->playAnimation(0, 3, 3, 300.00);
     }
     else if (passed_direction == STILL)
     {
@@ -457,6 +458,8 @@ void mainCharacter::saveGame()
     saveFile["bossKilled3"] = sdlSetup->bossKilled[2];
     saveFile["bossKilled4"] = sdlSetup->bossKilled[3];
 
+    saveFile["score"] = 5 * gold + 10 * experience;
+
     switch (sdlSetup->saveState)
     {
     case SAVE_1:
@@ -670,4 +673,37 @@ void mainCharacter::drawInteractPrompt()
     sdlSetup->loadFromRenderedText("interact", {255, 255, 255}, BAHNSCHRIFT);
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &interactRect);
     sdlSetup->clearText();
+}
+
+int mainCharacter::getScore(int n)
+{
+    std::ifstream i1("saveFile1.json");
+    std::ifstream i2("saveFile2.json");
+    std::ifstream i3("saveFile3.json");
+    std::ifstream i4("saveFile4.json");
+    std::ifstream i5("saveFile5.json");
+    json temp[5];
+    temp[0] << i1;
+    temp[1] << i2;
+    temp[2] << i3;
+    temp[3] << i4;
+    temp[4] << i5;
+
+    return temp[n]["score"];
+}
+
+std::string mainCharacter::getSavedNames(int n)
+{
+    std::ifstream i1("saveFile1.json");
+    std::ifstream i2("saveFile2.json");
+    std::ifstream i3("saveFile3.json");
+    std::ifstream i4("saveFile4.json");
+    std::ifstream i5("saveFile5.json");
+    json temp[5];
+    temp[0] << i1;
+    temp[1] << i2;
+    temp[2] << i3;
+    temp[3] << i4;
+    temp[4] << i5;
+    return temp[n]["playerName"];
 }

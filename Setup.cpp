@@ -23,7 +23,7 @@ Setup::Setup(bool *quit)
     //setup the event
     mainEvent = new SDL_Event();
 
-    for(int i=0;i<4;i++){
+    for(int i=0;i<5;i++){
         bossKilled[i] =false;
     }
 

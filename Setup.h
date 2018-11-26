@@ -7,6 +7,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+
 enum {
   SAVE_1,
   SAVE_2,

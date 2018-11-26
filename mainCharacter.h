@@ -91,6 +91,9 @@ class mainCharacter{
 
     enemyType eType;
 
+    int getScore(int n);
+    std::string getSavedNames(int n);
+
     private:
     worldMap *Map;
 
@@ -132,9 +135,7 @@ class mainCharacter{
     struct item potion={"potion",5};
     struct item elixir={"elixir",5};
 
-    int perk;
-
-    
+    int perk; 
 
     unsigned int bossTimer;
     
@@ -144,6 +145,7 @@ class mainCharacter{
     SDL_Texture *spacebar;
     SDL_Rect spacebarRect;
     SDL_Rect interactRect;
-    
+
     
 };
+

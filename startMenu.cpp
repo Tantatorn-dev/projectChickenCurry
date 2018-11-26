@@ -26,6 +26,7 @@ startMenuButton::startMenuButton(Setup *passed_setup, int passed_x, int passed_y
     currentMouseState = MOUSE_OUT;
 
     SDL_StartTextInput();
+
 }
 
 startMenuButton::~startMenuButton()
@@ -212,15 +213,20 @@ startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *pas
     leaderBox = {0, 100, 800, 400};
     leaderTextRect = {325, 105, 150, 50};
 
-    saveText = {0,0,100,50};
+    saveText = {0, 0, 100, 50};
 
     for (int i = 0; i < 5; i++)
     {
-        nLeaderRect[i].x = 5;
-        nLeaderRect[i].w = 50;
-        nLeaderRect[i].h = 50;
-        nLeaderRect[i].y = 155 + 55 * i;
+        nLeaderRect[i] = {40, 155 + 55 * i, 50, 50};
+        nameRect[i] = {100, 155 + 55 * i, 160, 50};
+        scoreRect[i] ={480,155+55*i,100,50};
     }
+
+    for(int i=0;i<5;i++){
+        names[i] = lo->getSavedNames(i);
+        score[i] = lo->getScore(i);
+    }
+    std::sort(indices, indices+5, sort_indices(score));
 
     tabIcon = NULL;
     tabIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/leaderboardIcon.png");
@@ -435,54 +441,71 @@ void startMenu::drawLeaderboard()
             sdlSetup->loadFromRenderedText(iStr, {255, 255, 255}, BAHNSCHRIFT);
             SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &nLeaderRect[i]);
             sdlSetup->clearText();
+ 
+            sdlSetup->loadFromRenderedText(names[indices[i]],{255,255,255},BAHNSCHRIFT);
+            SDL_QueryTexture(sdlSetup->getTextTexture(),NULL,NULL,&nameRect[i].w,&nameRect[i].h);
+            SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&nameRect[i]);
+            sdlSetup->clearText();
+
+            std::string scoreString = std::to_string(score[indices[i]]);
+            sdlSetup->loadFromRenderedText(scoreString,{255,255,255},BAHNSCHRIFT);
+            SDL_QueryTexture(sdlSetup->getTextTexture(),NULL,NULL,&scoreRect[i].w,&scoreRect[i].h);
+            SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&scoreRect[i]);
+            sdlSetup->clearText();
         }
+
     }
 }
 
-void startMenu::drawSave(){
-    std::string saveString="SAVE ";
-    switch(sdlSetup->saveState){
-        case SAVE_1:
-        saveString +="1";
+void startMenu::drawSave()
+{
+    std::string saveString = "SAVE ";
+    switch (sdlSetup->saveState)
+    {
+    case SAVE_1:
+        saveString += "1";
         break;
-        case SAVE_2:
-        saveString +="2";
+    case SAVE_2:
+        saveString += "2";
         break;
-        case SAVE_3:
-        saveString +="3";
+    case SAVE_3:
+        saveString += "3";
         break;
-        case SAVE_4:
-        saveString +="4";
+    case SAVE_4:
+        saveString += "4";
         break;
-        case SAVE_5:
-        saveString +="5";
+    case SAVE_5:
+        saveString += "5";
         break;
-        default:
+    default:
         break;
     }
-    sdlSetup->loadFromRenderedText(saveString,{255,255,255},BAHNSCHRIFT);
-    SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&saveText);
+    sdlSetup->loadFromRenderedText(saveString, {255, 255, 255}, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &saveText);
     sdlSetup->clearText();
 
-    if(sdlSetup->getMainEvent()->type ==SDL_KEYDOWN && SDL_GetTicks()-saveTimer>300){
-        switch(sdlSetup->getMainEvent()->key.keysym.sym ){
-            case SDLK_UP:
-            (sdlSetup->saveState)+=1;
+    if (sdlSetup->getMainEvent()->type == SDL_KEYDOWN && SDL_GetTicks() - saveTimer > 300)
+    {
+        switch (sdlSetup->getMainEvent()->key.keysym.sym)
+        {
+        case SDLK_UP:
+            (sdlSetup->saveState) += 1;
             break;
-            case SDLK_DOWN:
-            (sdlSetup->saveState)-=1;
+        case SDLK_DOWN:
+            (sdlSetup->saveState) -= 1;
             break;
-            default:
+        default:
             break;
         }
 
-        if(sdlSetup->saveState>=4){
-            sdlSetup->saveState=4;
+        if (sdlSetup->saveState >= 4)
+        {
+            sdlSetup->saveState = 4;
         }
-        else if(sdlSetup->saveState<=0){
-            sdlSetup->saveState=0;
+        else if (sdlSetup->saveState <= 0)
+        {
+            sdlSetup->saveState = 0;
         }
-        saveTimer=SDL_GetTicks();
+        saveTimer = SDL_GetTicks();
     }
-
 }
