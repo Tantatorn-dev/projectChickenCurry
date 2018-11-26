@@ -134,15 +134,15 @@ void startMenuButton::drawMenuButton()
     }
 }
 
-startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3,audioManager *passed_audio,mainCharacter *passed_lo)
+startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *passed_state1, componentState *passed_state2, componentState *passed_state3, audioManager *passed_audio, mainCharacter *passed_lo)
 {
     sdlSetup = passed_setup;
     quit = passed_quit;
     mainGameLoopState = passed_state1;
 
-    lo=passed_lo;
+    lo = passed_lo;
 
-    audio=passed_audio;
+    audio = passed_audio;
 
     introState1 = passed_state2;
     introState2 = passed_state3;
@@ -173,6 +173,8 @@ startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *pas
 
     inputText = "Your name";
 
+    sdlSetup->saveState = SAVE_1;
+
     promptTextRect.x = 300;
     promptTextRect.y = 280;
     promptTextRect.w = 200;
@@ -196,12 +198,32 @@ startMenu::startMenu(Setup *passed_setup, bool *passed_quit, componentState *pas
     pressEnterToConfirmRect.w = 150;
     pressEnterToConfirmRect.h = 50;
 
-    
     pressAnyKeyToContinueRect.x = 350;
     pressAnyKeyToContinueRect.y = 530;
     pressAnyKeyToContinueRect.w = 150;
     pressAnyKeyToContinueRect.h = 50;
 
+    tabRect.x = 500;
+    tabRect.y = 520;
+    tabRect.w = 150;
+    tabRect.h = 70;
+
+    leaderboardRect = {660, 530, 125, 50};
+    leaderBox = {0, 100, 800, 400};
+    leaderTextRect = {325, 105, 150, 50};
+
+    saveText = {0,0,100,50};
+
+    for (int i = 0; i < 5; i++)
+    {
+        nLeaderRect[i].x = 5;
+        nLeaderRect[i].w = 50;
+        nLeaderRect[i].h = 50;
+        nLeaderRect[i].y = 155 + 55 * i;
+    }
+
+    tabIcon = NULL;
+    tabIcon = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/leaderboardIcon.png");
 }
 
 startMenu::~startMenu()
@@ -210,6 +232,9 @@ startMenu::~startMenu()
     bg = NULL;
 
     SDL_StopTextInput();
+
+    SDL_DestroyTexture(tabIcon);
+    tabIcon = NULL;
 }
 
 void startMenu::draw()
@@ -222,13 +247,15 @@ void startMenu::draw()
     buttonContinue->handleMouseEvent();
     buttonExit->handleMouseEvent();
 
+    this->drawSave();
+
     if (buttonStart->getCurrentMouseState() == MOUSE_DOWN)
     {
         *introState1 = ON;
         audio->playClick();
     }
 
-    if(buttonContinue->getCurrentMouseState() == MOUSE_DOWN)
+    if (buttonContinue->getCurrentMouseState() == MOUSE_DOWN)
     {
         audio->playClick();
         lo->loadGame();
@@ -244,6 +271,8 @@ void startMenu::draw()
     sdlSetup->loadFromRenderedText("Created by Tantatorn Suksangwarn  61010402@kmitl.ac.th", {255, 255, 255}, BAHNSCHRIFT);
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &creatorNameRect);
     sdlSetup->clearText();
+
+    drawLeaderboard();
 }
 
 void startMenu::playBGAnimation(int beginFrame, int endFrame, float speed)
@@ -274,13 +303,14 @@ void startMenu::drawEnterNameScreen()
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &promptTextRect);
     sdlSetup->clearText();
 
-    sdlSetup->loadFromRenderedText("press Enter to confirm",{cBlink,cBlink,cBlink},BAHNSCHRIFT);
-    SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&pressEnterToConfirmRect);
+    sdlSetup->loadFromRenderedText("press Enter to confirm", {cBlink, cBlink, cBlink}, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &pressEnterToConfirmRect);
     sdlSetup->clearText();
 
-    cBlink-=5;
-    if(cBlink==0){
-        cBlink=255;
+    cBlink -= 5;
+    if (cBlink == 0)
+    {
+        cBlink = 255;
     }
 
     renderText = true;
@@ -364,18 +394,95 @@ void startMenu::drawPrologue()
     SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &prologueRect[3]);
     sdlSetup->clearText();
 
-    sdlSetup->loadFromRenderedText("press any key to continue",{cBlink,cBlink,cBlink},BAHNSCHRIFT);
-    SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&pressAnyKeyToContinueRect);
+    sdlSetup->loadFromRenderedText("press any key to continue", {cBlink, cBlink, cBlink}, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &pressAnyKeyToContinueRect);
     sdlSetup->clearText();
 
-    cBlink-=5;
-    if(cBlink==0){
-        cBlink=255;
+    cBlink -= 5;
+    if (cBlink == 0)
+    {
+        cBlink = 255;
     }
 
-    if(sdlSetup->getMainEvent()->type == SDL_KEYDOWN){
-        *introState2=OFF;
+    if (sdlSetup->getMainEvent()->type == SDL_KEYDOWN)
+    {
+        *introState2 = OFF;
         audio->playMainTheme();
-        *mainGameLoopState=ON;
+        *mainGameLoopState = ON;
     }
+}
+
+void startMenu::drawLeaderboard()
+{
+    SDL_RenderCopy(sdlSetup->getRenderer(), tabIcon, NULL, &tabRect);
+
+    sdlSetup->loadFromRenderedText("leaderboard", {255, 255, 255}, BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &leaderboardRect);
+    sdlSetup->clearText();
+
+    if (sdlSetup->getMainEvent()->type == SDL_KEYDOWN && sdlSetup->getMainEvent()->key.keysym.sym == SDLK_TAB)
+    {
+        SDL_SetRenderDrawColor(sdlSetup->getRenderer(), 0xff, 0x5b, 0x0f, 0xFF);
+        SDL_RenderFillRect(sdlSetup->getRenderer(), &leaderBox);
+
+        sdlSetup->loadFromRenderedText("Leaderboard", {255, 255, 255}, BAHNSCHRIFT);
+        SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &leaderTextRect);
+        sdlSetup->clearText();
+
+        for (int i = 0; i < 5; i++)
+        {
+            std::string iStr = std::to_string(i + 1);
+            sdlSetup->loadFromRenderedText(iStr, {255, 255, 255}, BAHNSCHRIFT);
+            SDL_RenderCopy(sdlSetup->getRenderer(), sdlSetup->getTextTexture(), NULL, &nLeaderRect[i]);
+            sdlSetup->clearText();
+        }
+    }
+}
+
+void startMenu::drawSave(){
+    std::string saveString="SAVE ";
+    switch(sdlSetup->saveState){
+        case SAVE_1:
+        saveString +="1";
+        break;
+        case SAVE_2:
+        saveString +="2";
+        break;
+        case SAVE_3:
+        saveString +="3";
+        break;
+        case SAVE_4:
+        saveString +="4";
+        break;
+        case SAVE_5:
+        saveString +="5";
+        break;
+        default:
+        break;
+    }
+    sdlSetup->loadFromRenderedText(saveString,{255,255,255},BAHNSCHRIFT);
+    SDL_RenderCopy(sdlSetup->getRenderer(),sdlSetup->getTextTexture(),NULL,&saveText);
+    sdlSetup->clearText();
+
+    if(sdlSetup->getMainEvent()->type ==SDL_KEYDOWN && SDL_GetTicks()-saveTimer>300){
+        switch(sdlSetup->getMainEvent()->key.keysym.sym ){
+            case SDLK_UP:
+            (sdlSetup->saveState)+=1;
+            break;
+            case SDLK_DOWN:
+            (sdlSetup->saveState)-=1;
+            break;
+            default:
+            break;
+        }
+
+        if(sdlSetup->saveState>=4){
+            sdlSetup->saveState=4;
+        }
+        else if(sdlSetup->saveState<=0){
+            sdlSetup->saveState=0;
+        }
+        saveTimer=SDL_GetTicks();
+    }
+
 }

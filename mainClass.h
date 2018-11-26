@@ -14,7 +14,7 @@
 #include "startMenu.h"
 #include "inGameMenu.h"
 #include "battleScene.h"
-#include "deathScreen.h"
+#include "endScreen.h"
 #include "audioManager.h"
 
 #define SCREEN_WIDTH 640
@@ -47,7 +47,7 @@ private:
 
   inGameMenu *menu;
   battleScene *combatScene;
-  deathScreen *dScreen;
+  endScreen *dScreen;
 
   audioManager *audio;
 
@@ -55,6 +55,7 @@ private:
   componentState introState1;
   componentState introState2;
   componentState deathState;
+  componentState endState;
 
   unsigned int introTimer;
   unsigned int deathTimer;

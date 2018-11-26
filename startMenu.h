@@ -40,6 +40,7 @@ class startMenuButton{
 
   std::string mText;
   void drawMenuButton();
+
 };
 
 class startMenu
@@ -52,12 +53,16 @@ class startMenu
   void drawEnterNameScreen();
   void drawPrologue();
 
+  void drawSave();
+
   private:
     Setup *sdlSetup;
 
     int currentFrame = 0;
 
     bool *quit;
+
+    void drawLeaderboard();
 
     SDL_Rect bgRect;
     SDL_Rect bgCrop;
@@ -104,4 +109,14 @@ class startMenu
     audioManager *audio;
 
     mainCharacter *lo;
+
+    SDL_Texture *tabIcon;
+    SDL_Rect tabRect;
+    SDL_Rect leaderboardRect;
+    SDL_Rect leaderBox;
+    SDL_Rect leaderTextRect;
+    SDL_Rect nLeaderRect[5];
+    SDL_Rect saveText;
+
+    unsigned int saveTimer;
 };

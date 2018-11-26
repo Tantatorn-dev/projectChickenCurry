@@ -7,6 +7,14 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+enum {
+  SAVE_1,
+  SAVE_2,
+  SAVE_3,
+  SAVE_4,
+  SAVE_5
+};
+
 enum mouseState
 {
   MOUSE_OUT = 0,
@@ -53,6 +61,7 @@ public:
   void setPlayerName(std::string passed_name);
   std::string getPlayerName();
 
+  int saveState;
   bool bossKilled[4];
 
 private:

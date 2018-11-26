@@ -431,6 +431,7 @@ void mainCharacter::levelUp()
 
 void mainCharacter::saveGame()
 {
+
     saveFile["playerName"] = sdlSetup->getPlayerName();
 
     saveFile["hp"] = 23;
@@ -456,15 +457,70 @@ void mainCharacter::saveGame()
     saveFile["bossKilled3"] = sdlSetup->bossKilled[2];
     saveFile["bossKilled4"] = sdlSetup->bossKilled[3];
 
-    std::ofstream o("saveFile.json");
-    o << std::setw(4) << saveFile.dump() << std::endl;
+    switch (sdlSetup->saveState)
+    {
+    case SAVE_1:
+    {
+        std::ofstream o1("saveFile1.json");
+        o1 << std::setw(4) << saveFile.dump() << std::endl;
+        break;
+    }
+    case SAVE_2:
+    {
+        std::ofstream o2("saveFile2.json");
+        o2 << std::setw(4) << saveFile.dump() << std::endl;
+        break;
+    }
+    case SAVE_3:
+    {
+        std::ofstream o3("saveFile3.json");
+        o3 << std::setw(4) << saveFile.dump() << std::endl;
+        break;
+    }
+    case SAVE_4:
+    {
+        std::ofstream o4("saveFile4.json");
+        o4 << std::setw(4) << saveFile.dump() << std::endl;
+        break;
+    }
+    case SAVE_5:
+    {
+        std::ofstream o5("saveFile5.json");
+        o5 << std::setw(4) << saveFile.dump() << std::endl;
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void mainCharacter::loadGame()
 {
-    std::ifstream i("saveFile.json");
-
-    saveFile = json::parse(i);
+    std::ifstream i1("saveFile1.json");
+    std::ifstream i2("saveFile2.json");
+    std::ifstream i3("saveFile3.json");
+    std::ifstream i4("saveFile4.json");
+    std::ifstream i5("saveFile5.json");
+    switch (sdlSetup->saveState)
+    {
+    case SAVE_1:
+        saveFile << i1;
+        break;
+    case SAVE_2:
+        saveFile << i2;
+        break;
+    case SAVE_3:
+        saveFile << i3;
+        break;
+    case SAVE_4:
+        saveFile << i4;
+        break;
+    case SAVE_5:
+        saveFile << i5;
+        break;
+    default:
+        break;
+    }
 
     Lo->setX(saveFile["PosX"]);
     Lo->setY(saveFile["PosY"]);

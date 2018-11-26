@@ -1,6 +1,6 @@
-#include "deathScreen.h"
+#include "endScreen.h"
 
-deathScreen::deathScreen(Setup *passed_setup,audioManager *passed_audio)
+endScreen::endScreen(Setup *passed_setup,audioManager *passed_audio)
 {
     sdlSetup = passed_setup;
     audio = passed_audio;
@@ -12,6 +12,7 @@ deathScreen::deathScreen(Setup *passed_setup,audioManager *passed_audio)
     youDiedText = NULL;
     youDiedText = IMG_LoadTexture(sdlSetup->getRenderer(), "resource/image/death_screen/you_died.png");
 
+
     bgRect.x= 0;
     bgRect.y=100;
     bgRect.w=800;
@@ -22,19 +23,24 @@ deathScreen::deathScreen(Setup *passed_setup,audioManager *passed_audio)
     youDiedTextRect.w = 400;
     youDiedTextRect.h = 100;
 
-
+    endBGRect={200,150,400,300};
+    endBG = NULL;
+    endBG = IMG_LoadTexture(sdlSetup->getRenderer(),"resource/image/end_screen/endScene.png");
 }
 
-deathScreen::~deathScreen()
+endScreen::~endScreen()
 {
     SDL_DestroyTexture(background);
     background = NULL;
 
     SDL_DestroyTexture(youDiedText);
     youDiedText = NULL;
+
+    SDL_DestroyTexture(endBG);
+    endBG =NULL;
 }
 
-void deathScreen::playBGAnimation(int beginFrame,int endFrame,int speed)
+void endScreen::playBGAnimation(int beginFrame,int endFrame,int speed)
 {
     if (speed + animationDelay < SDL_GetTicks())
     {
@@ -56,13 +62,16 @@ void deathScreen::playBGAnimation(int beginFrame,int endFrame,int speed)
     SDL_RenderCopy(sdlSetup->getRenderer(), background, &crop, &bgRect);
 }
 
-void deathScreen::draw()
+
+
+void endScreen::draw()
 {
     this->playBGAnimation(0,7,100);
 
-    SDL_RenderCopy(sdlSetup->getRenderer(),youDiedText,NULL,&youDiedTextRect);
-    
-    
+    SDL_RenderCopy(sdlSetup->getRenderer(),youDiedText,NULL,&youDiedTextRect); 
+}
 
-   
+void endScreen::drawEndScreen()
+{
+    SDL_RenderCopy(sdlSetup->getRenderer(),endBG,NULL,&endBGRect);
 }

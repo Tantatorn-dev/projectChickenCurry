@@ -26,6 +26,8 @@ Setup::Setup(bool *quit)
     for(int i=0;i<4;i++){
         bossKilled[i] =false;
     }
+
+    saveState = SAVE_1;
 }
 
 Setup::~Setup()

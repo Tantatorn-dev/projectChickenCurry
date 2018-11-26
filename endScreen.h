@@ -6,10 +6,12 @@
 
 
 
-class deathScreen{
+class endScreen{
     public:
-    deathScreen(Setup *passed_setup,audioManager *passed_audio);
-    ~deathScreen();
+    endScreen(Setup *passed_setup,audioManager *passed_audio);
+    ~endScreen();
+
+    void drawEndScreen();
 
     void draw();
     private:
@@ -21,10 +23,13 @@ class deathScreen{
     void playBGAnimation(int beginFrame,int endFrame,int speed);
 
     SDL_Texture *background;
-    SDL_Texture *youDiedText;
+    SDL_Texture *youDiedText;  
 
     SDL_Rect bgRect;
     SDL_Rect crop;
+
+    SDL_Texture *endBG;
+    SDL_Rect endBGRect;
 
     SDL_Rect youDiedTextRect;
 
