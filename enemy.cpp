@@ -143,7 +143,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
                 state = ENEMY_ATTACKED;
                 audio->playMelee();
                 damage = lo->getATK() - this->defense;
-                this->hp -= damage;
+                if(this->defense > lo->getATK()){
+                    damage = 0;
+                }
+                else{
+                    damage = lo->getATK() - this->defense;
+                }
                 attackedTimer = SDL_GetTicks();
             }
             break;
@@ -156,7 +161,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
                 lo->setMP(lo->getMP() - 4);
-                damage = 3 / 2 * lo->getINT() - this->defense;
+                if(this->defense > 2* lo->getINT()){
+                    damage = 0;
+                }
+                else{
+                    damage = 2* lo->getINT() - this->defense;
+                }
                 this->hp -= damage;
             }
             break;
@@ -169,7 +179,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
                 lo->setMP(lo->getMP() - 4);
-                damage = 3 / 2 * lo->getINT() - this->defense;
+                if(this->defense > 2* lo->getINT()){
+                    damage = 0;
+                }
+                else{
+                    damage = 2 * lo->getINT() - this->defense;
+                }
                 this->hp -= damage;
             }
             break;
@@ -182,7 +197,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
                 lo->setMP(lo->getMP() - 7);
-                damage = 2 * lo->getINT() - this->defense;
+                if(this->defense > 3* lo->getINT()){
+                    damage = 0;
+                }
+                else{
+                    damage = 3 * lo->getINT() - this->defense;
+                }
                 this->hp -= damage;
             }
             break;
@@ -195,7 +215,13 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
                 magicTexture = IMG_LoadTexture(sdlSetup->getRenderer(), magicPath.c_str());
                 attackedTimer = SDL_GetTicks();
                 lo->setMP(lo->getMP() - 10);
-                damage = 3 * lo->getINT() - this->defense;
+                if(this->defense > 10* lo->getINT()){
+                    damage = 0;
+                }
+                else{
+                    damage = 10 * lo->getINT() - this->defense;
+                }
+                
                 this->hp -= damage;
             }
             break;
@@ -219,7 +245,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             lo->setGold(lo->getGold() + gold);
         }
         else{
-            lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
+            if(lo->getDEF()-this->attack>0){
+                lo->setHP(lo->getHP());
+            }
+            else{
+                lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
+            }
         }
     }
     else if (state == ENEMY_CASTED && SDL_GetTicks() - attackedTimer > 2000)
@@ -237,7 +268,12 @@ void enemy::drawUpdate(mouseState passed_mouseState, int button)
             lo->setGold(lo->getGold() + gold);
         }
         else{
-            lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
+            if(lo->getDEF()-this->attack>0){
+                lo->setHP(lo->getHP());
+            }
+            else{
+                lo->setHP(lo->getHP() - (this->attack - lo->getDEF()));
+            }
         }
     }
     else if (state == ENEMY_ATTACKING && SDL_GetTicks() - attackingTimer > 4000)

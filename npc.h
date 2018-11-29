@@ -23,6 +23,8 @@ class npc
     void walkUpDown(int distance);
     void walkLeftRight(int distance);
 
+    sprite *getSprite(){return npcSprite;}
+
   private:
     Setup *sdlSetup;
 

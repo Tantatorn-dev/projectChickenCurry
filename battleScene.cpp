@@ -166,10 +166,10 @@ battleScene::battleScene(Setup *passed_setup, mainCharacter *passed_lo, audioMan
     enemies.push_back(new enemy(sdlSetup, Lo, "goblin bandit", 8, 5, 23, 8, 11, audio, 150, 120, OFF));
     enemies.push_back(new enemy(sdlSetup, Lo, "skeleton", 10, 4, 18, 10, 16, audio, 150, 120, OFF));
 
-    enemies.push_back(new enemy(sdlSetup, Lo, "hellrider", 17, 8, 203, 300, 400, audio, 300, 260, ON));
-    enemies.push_back(new enemy(sdlSetup, Lo, "species 77", 17, 8, 203, 300, 400, audio, 300, 260, ON));
-    enemies.push_back(new enemy(sdlSetup, Lo, "drake", 17, 8, 203, 300, 400, audio, 300, 260, ON));
-    enemies.push_back(new enemy(sdlSetup, Lo, "lucifer", 17, 8, 203, 300, 400, audio, 300, 260, ON));
+    enemies.push_back(new enemy(sdlSetup, Lo, "hellrider", 17, 8, 125, 300, 400, audio, 300, 260, ON));
+    enemies.push_back(new enemy(sdlSetup, Lo, "species 77", 28, 14, 210, 500, 500, audio, 300, 260, ON));
+    enemies.push_back(new enemy(sdlSetup, Lo, "drake", 39, 30, 465, 2000, 2000, audio, 300, 260, ON));
+    enemies.push_back(new enemy(sdlSetup, Lo, "lucifer", 65, 69, 635, 5000, 5000, audio, 300, 260, ON));
 
     closingBattleSceneTimer = 0;
 }

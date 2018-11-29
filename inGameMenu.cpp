@@ -226,7 +226,7 @@ void mButton::drawMenuButtonWithUpgradeIcon()
     }
 }
 
-inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio)
+inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio,bool *passed_quit)
 {
     sdlSetup = passed_setup;
     lo = passed_lo;
@@ -243,7 +243,7 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManage
     menuBox.w = 300;
     menuBox.h = 600;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         menuButtons.push_back(new mButton(sdlSetup, 520, 20 + 100 * i, 220, 80, menuText[i], NOT_ICON));
     }
@@ -374,6 +374,8 @@ inGameMenu::inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManage
     perkRect.w = 100;
     perkRect.h = 50;
 
+    quit=passed_quit;
+
     perkPointRect.x = 330;
     perkPointRect.y = 270;
     perkPointRect.w = 50;
@@ -416,7 +418,7 @@ inGameMenu::~inGameMenu()
 {
     delete sdlSetup;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         delete menuButtons[i];
     }
@@ -513,6 +515,10 @@ void inGameMenu::handlingEvent()
             audio ->playSave();
             lo->saveGame();
             saveTimer = SDL_GetTicks();
+        }
+
+        if(menuButtons[3]->getCurrentMouseState() == MOUSE_DOWN){
+            *quit = true;
         }
 
 

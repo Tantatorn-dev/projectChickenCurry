@@ -17,7 +17,7 @@ mainClass ::mainClass()
 
     srand(time(NULL));
 
-    menu = new inGameMenu(sdlSetup, Lo, audio);
+    menu = new inGameMenu(sdlSetup, Lo, audio,&quit);
     combatScene = new battleScene(sdlSetup, Lo, audio);
     dScreen = new endScreen(sdlSetup, audio);
 
@@ -84,20 +84,23 @@ void mainClass::gameLoop()
                 audio->playOpeningTheme();
                 Lo->resetCharacter();
             }
+
+            if(Lo->getLVL() >= 10){
+                endState = ON;
+            }
         }
         else if (deathState == ON)
         {
             dScreen->draw();
-            if (SDL_GetTicks() - deathTimer > 6000)
+            if (SDL_GetTicks() - deathTimer > 8000)
             {
-                deathState = OFF;
-                introState1 = OFF;
-                introState2 = OFF;
+                quit =true;
             }
         }
         else if (endState == ON)
         {
             dScreen->drawEndScreen();
+            
         }
         else if (introState2 == ON && SDL_GetTicks() - introTimer > 300)
         {

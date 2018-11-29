@@ -264,6 +264,7 @@ void startMenu::draw()
     if (buttonContinue->getCurrentMouseState() == MOUSE_DOWN)
     {
         audio->playClick();
+        audio->playMainTheme();
         lo->loadGame();
         *mainGameLoopState = ON;
     }

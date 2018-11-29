@@ -69,7 +69,7 @@ protected:
 class inGameMenu
 {
 public:
-  inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio);
+  inGameMenu(Setup *passed_setup, mainCharacter *passed_lo,audioManager *passed_audio,bool *passed_quit);
   ~inGameMenu();
   void handlingEvent();
 
@@ -78,11 +78,14 @@ private:
 
   audioManager *audio;
 
+  bool *quit;
+
   void drawMenuBox();
 
-  std::string menuText[5] = {"item",
+  std::string menuText[4] = {"item",
                              "character",
-                             "save"};
+                             "save",
+                             "exit"};
 
   void drawMenuButton();
 

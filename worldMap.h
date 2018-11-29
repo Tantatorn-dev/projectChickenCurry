@@ -20,6 +20,8 @@ public:
   void drawBack();
 
   std::vector<tree*> getTrees() {return trees;}
+  std::vector<npc*> getSoldiers(){return soldiers;}
+  std::vector<npc*> getOldMan(){return oldMan;}
   sprite** getCliff(){return cliff;}
   sprite** getRiver1(){return river1Background;}
   sprite* getWaterfall(){return waterfallBackground;}
@@ -29,6 +31,8 @@ public:
   sprite* getSummonCirclePurple(){return summonCirclePurple;}
   sprite* getSummonCircleRed(){return summonCircleRed;}
 
+  sprite** getSea1(){return sea1;}
+  sprite** getSea2(){return sea2;}
 
 private:
   Setup *sdlSetup;
@@ -49,6 +53,9 @@ private:
   sprite *summonCircleRed;
   sprite *summonCirclePurple;
   sprite *summonCircleBlue;
+
+  sprite *sea1[5];
+  sprite *sea2[6];
   
 
   int treePosition[20]={
@@ -66,4 +73,6 @@ private:
   std::vector<tree*> trees;
 
   std::vector <npc*> soldiers;
+  std::vector <npc*> adult;
+  std::vector <npc*> oldMan;
 };

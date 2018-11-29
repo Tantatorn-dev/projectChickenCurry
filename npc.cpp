@@ -76,11 +76,11 @@ void npc::walkLeftRight(int distance)
 void npc::walkUpDown(int distance)
 {
        
-    if(npcSprite->getX()-startX==distance){
+    if(npcSprite->getY()-startY==distance){
         Movement=BACKWARD;
     }
     
-    if(npcSprite->getX()-startX== -1){
+    if(npcSprite->getY()-startY== -1){
         Movement=FORWARD;
     }
 

@@ -57,7 +57,7 @@ mainCharacter::mainCharacter(Setup *passed_setup, float *passed_cameraX, float *
     interactRect = {365, 200, 100, 50};
 
     eType = MINIONS;
-
+    
 }
 
 mainCharacter::~mainCharacter()
@@ -128,6 +128,20 @@ void mainCharacter::update()
             }
         }
 
+        for(int i=0;i<6;i++){
+            if (Lo->isCollide(Map->getSoldiers()[i]->getSprite()->getCollisionRect()))
+            {
+                colliding = true;
+            }
+        }
+
+        for(int i=0;i<2;i++){
+            if (Lo->isCollide(Map->getOldMan()[i]->getSprite()->getCollisionRect()))
+            {
+                colliding = true;
+            }
+        }
+
         for (int i = 0; i < 4; i++)
         {
             if (Lo->isCollide(Map->getCliff()[i]->getCollisionRect()))
@@ -135,6 +149,22 @@ void mainCharacter::update()
                 colliding = true;
             }
         }
+
+        for(int i=0;i<5;i++){
+            if (Lo->isCollide(Map->getSea1()[i]->getCollisionRect()))
+            {
+                colliding = true;
+            }
+        }
+
+        for(int i=0;i<6;i++){
+            if (Lo->isCollide(Map->getSea2()[i]->getCollisionRect()))
+            {
+                colliding = true;
+            }
+        }
+
+
 
         if (Lo->isCollide(Map->getWaterfall()->getCollisionRect()))
         {

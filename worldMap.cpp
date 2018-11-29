@@ -14,6 +14,14 @@ worldMap::worldMap(Setup *sdlSetup, float *cameraX, float *cameraY)
         }
     }
 
+    for(int i=0;i<5;i++){
+        sea1[i] = new sprite(sdlSetup->getRenderer(),"resource/image/world_map/water.png",SCREEN_WIDTH*(i),SCREEN_HEIGHT*5,SCREEN_WIDTH,SCREEN_HEIGHT,cameraX,cameraY,collisionRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT));
+    }
+
+    for(int i=0;i<6;i++){
+        sea2[i] = new sprite(sdlSetup->getRenderer(),"resource/image/world_map/water.png",SCREEN_WIDTH*5,SCREEN_HEIGHT*i,SCREEN_WIDTH,SCREEN_HEIGHT,cameraX,cameraY,collisionRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT));
+    }
+
     for (int i = 0; i < 4; i++)
     {
         cliff[i] = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/cliff.png", SCREEN_WIDTH * (i + 1), 0, SCREEN_WIDTH, SCREEN_HEIGHT, cameraX, cameraY, collisionRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -36,6 +44,14 @@ worldMap::worldMap(Setup *sdlSetup, float *cameraX, float *cameraY)
     }
 
     soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 940, 800, cameraX, cameraY));
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 1020, 1450, cameraX, cameraY));
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 1300, 800, cameraX, cameraY));
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 1150, 1300, cameraX, cameraY));
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 1600, 1700, cameraX, cameraY));
+    soldiers.push_back(new npc(sdlSetup, "resource/image/npc/soldier.png", 2140, 1000, cameraX, cameraY));
+
+    oldMan.push_back(new npc(sdlSetup, "resource/image/npc/old man.png", 840, 1490, cameraX, cameraY));
+    oldMan.push_back(new npc(sdlSetup, "resource/image/npc/old man.png", 1200, 790, cameraX, cameraY));
 
     summonCircleGreen = new sprite(sdlSetup->getRenderer(), "resource/image/world_map/summon_circle_1.png", 1400, 1400, 400, 400, cameraX, cameraY, collisionRectangle(0, 0, 400, 400));
     summonCircleGreen->setUpAnimation(2, 1);
@@ -77,7 +93,17 @@ worldMap::~worldMap()
         delete river1Sprite[i];
     }
 
+    for (std::vector<npc *>::iterator i = soldiers.begin(); i != soldiers.end(); ++i)
+    {
+        delete (*i);
+    }
     soldiers.clear();
+
+    for (std::vector<npc *>::iterator i = oldMan.begin(); i != oldMan.end(); ++i)
+    {
+        delete (*i);
+    }
+    oldMan.clear();
 
     delete cameraX;
     delete cameraY;
@@ -86,6 +112,14 @@ worldMap::~worldMap()
     delete summonCircleBlue;
     delete summonCircleRed;
     delete summonCirclePurple;
+
+    for(int i=0;i<5;i++){
+        delete sea1[i];
+    }
+
+    for(int i=0;i<6;i++){
+        delete sea2[i];
+    }
 }
 
 void worldMap::drawBack()
@@ -115,6 +149,14 @@ void worldMap::drawBack()
     waterfall->playAnimation(0, 3, 0, 100);
     waterfall->draw();
 
+    for(int i=0;i<5;i++){
+        sea1[i]->draw();
+    }
+
+    for(int i=0;i<6;i++){
+        sea2[i]->draw();
+    }
+
     //draw the river 1
     for (int i = 0; i < 4; i++)
     {
@@ -123,7 +165,20 @@ void worldMap::drawBack()
         river1Sprite[i]->draw();
     }
 
-    soldiers[0]->walkLeftRight(100);
+    for (int i = 0; i < 3; i++)
+    {
+        soldiers[i]->walkLeftRight(100);
+    }
+
+    for (int i = 3; i < 5; i++)
+    {
+        soldiers[i]->walkUpDown(100);
+    }
+
+    oldMan[0]->walkUpDown(70);
+    oldMan[1]->walkLeftRight(60);
+
+    soldiers[5]->walkLeftRight(50);
 
     if (!(sdlSetup->bossKilled[0]))
     {
@@ -157,4 +212,3 @@ void worldMap::drawFront()
         (*i)->drawCrown();
     }
 }
-
